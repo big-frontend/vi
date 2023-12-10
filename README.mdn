@@ -1,0 +1,1 @@
+# vi git initn git add README.mdn git commit -m first commitn git branch -M mainn git remote add origin https://github.com/big-frontend/vi.gitn git push -u origin main
