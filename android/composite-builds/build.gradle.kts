@@ -1,7 +1,6 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
-        maven { url = uri("./local-repo") }
         mavenLocal()
         maven { url = uri("https://s01.oss.sonatype.org/content/repositories/public") }
         maven { url = uri("https://maven.oschina.net/content/groups/public/") }
@@ -25,7 +24,6 @@ buildscript {
 //}
 allprojects {
     repositories {
-        maven { url = uri("./local-repo") }
         mavenLocal()
         maven { url = uri("https://s01.oss.sonatype.org/content/repositories/public") }
         maven { url = uri("https://maven.oschina.net/content/groups/public/") }
@@ -34,7 +32,6 @@ allprojects {
         maven { url = uri("https://artifact.bytedance.com/repository/byteX/") }
         mavenCentral()
         gradlePluginPortal()
-
     }
 //    tasks.withType(JavaCompile::class.java).configureEach { task ->
 //        task.options.encoding = 'UTF-8'

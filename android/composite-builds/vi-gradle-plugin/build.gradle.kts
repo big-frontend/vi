@@ -7,6 +7,27 @@ plugins {
     kotlin("plugin.serialization") version "1.4.20"
     id("com.github.johnrengelman.shadow") version "6.1.0"
 }
+repositories {
+    maven(url = "http://maven.scm.adc.com:8081/nexus/content/repositories/jcenter/") {
+        isAllowInsecureProtocol = true
+    }
+    maven(url = "http://maven.scm.adc.com:8081/nexus/content/repositories/google/") {
+        isAllowInsecureProtocol = true
+    }
+    maven(url = "http://nexus.os.adc.com/nexus/content/repositories/releases/") {
+        isAllowInsecureProtocol = true
+    }
+    maven(url = "http://nexus.os.adc.com/nexus/content/repositories/snapshots/") {
+        isAllowInsecureProtocol = true
+    }
+    maven(url = "http://maven.scm.adc.com:8081/nexus/content/groups/oppo-browser-public/") {
+        isAllowInsecureProtocol = true
+        credentials {
+            username = "swdp"
+            password = "swdp"
+        }
+    }
+}
 val AGP_VERSION :String by project
 val JAVASSIST_VERSION :String by project
 val KOTLIN_VERSION :String by project
@@ -56,6 +77,8 @@ dependencies {
 //    implementation("com.bytedance.android.byteX:const-inline-plugin:${BYTEX_VERSION}")
 //    implementation("com.bytedance.android.byteX:shrink-r-plugin:${BYTEX_VERSION}")
 //    implementation("com.bytedance.android.byteX:access-inline-plugin:${BYTEX_VERSION}")
+    implementation("org.json:json:20201115")
+    implementation("com.google.code.gson:gson:2.8.2")
 }
 
 java {

@@ -8,33 +8,18 @@ buildscript {
         maven { url = uri("https://maven.aliyun.com/repository/google/") }
         maven { url = uri("https://plugins.gradle.org/m2/") }
         maven { url = uri("https://artifact.bytedance.com/repository/byteX/") }
+        google()
         mavenCentral()
         gradlePluginPortal()
-
-    }
-    dependencies {
-        val AGP_VERSION:String by project
-        classpath("com.android.tools.build:gradle:${AGP_VERSION}")
-        val KOTLIN_VERSION:String by project
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:${KOTLIN_VERSION}")
     }
 }
-//plugins {
-//    id("com.jamesfchen.perf-plugin") version "1.0.0" apply false
-//}
+plugins {
+    id("com.android.application") version "7.4.1" apply false
+    id("com.android.library") version "7.4.1" apply false
+    id("org.jetbrains.kotlin.android") version "1.8.22" apply false
+    id("io.github.jamesfchen.vi-plugin") apply false
+}
 allprojects {
-    repositories {
-        maven { url = uri("./local-repo") }
-        mavenLocal()
-        maven { url = uri("https://s01.oss.sonatype.org/content/repositories/public") }
-        maven { url = uri("https://maven.oschina.net/content/groups/public/") }
-        maven { url = uri("https://maven.aliyun.com/repository/google/") }
-        maven { url = uri("https://plugins.gradle.org/m2/") }
-        maven { url = uri("https://artifact.bytedance.com/repository/byteX/") }
-        mavenCentral()
-        gradlePluginPortal()
-
-    }
 //    tasks.withType(JavaCompile::class.java).configureEach { task ->
 //        task.options.encoding = 'UTF-8'
 //        task.sourceCompatibility = JavaVersion.VERSION_11

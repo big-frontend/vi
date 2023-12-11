@@ -2,7 +2,7 @@ package com.jamesfchen.vi
 
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.api.BaseVariant
-import com.tencent.matrix.plugin.compat.AgpCompat
+import com.jamesfchen.vi.compat.AgpCompat
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.Project
 import org.gradle.api.file.ConfigurableFileCollection

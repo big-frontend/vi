@@ -4,8 +4,6 @@ import com.android.build.gradle.AppExtension
 import com.android.build.gradle.api.ApplicationVariant
 import com.jamesfchen.vi.apk.analyzer.ApkAnalyzerTask
 import com.jamesfchen.vi.apk.minify.*
-import com.tencent.matrix.plugin.compat.MatrixTraceCompat
-import com.tencent.matrix.trace.extension.MatrixTraceExtension
 import org.gradle.api.GradleException
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -64,8 +62,8 @@ class ViPlugin : Plugin<Project> {
         val resouceminifyExtension = (minifyExtension as ExtensionAware).extensions.create("resource", ResourceMinifyExtension::class.java)
         val imageExtension = (resouceminifyExtension as ExtensionAware).extensions.create("shrinkImage", ImageExtension::class.java)
         val sominifyExtension = (minifyExtension as ExtensionAware).extensions.create("so", SoMinifyExtension::class.java)
-        val traceExtension = (vi as ExtensionAware).extensions.create("trace", MatrixTraceExtension::class.java)
-        MatrixTraceCompat().inject(appExtension, project, traceExtension)
+//        val traceExtension = (vi as ExtensionAware).extensions.create("trace", MatrixTraceExtension::class.java)
+//        MatrixTraceCompat().inject(appExtension, project, traceExtension)
         project.afterEvaluate {
 //            project.extensions.getByType(ConstInlineExtension::class.java).apply {
 //                enable(constInlineExtension.isEnable)

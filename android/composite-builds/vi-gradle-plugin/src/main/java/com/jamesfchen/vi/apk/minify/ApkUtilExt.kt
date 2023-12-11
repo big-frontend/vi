@@ -1,6 +1,6 @@
 package com.jamesfchen.vi.apk.minify
 
-import com.android.utils.FileUtils
+import com.jamesfchen.vi.FileUtils
 import com.jamesfchen.vi.find7Zip
 import com.tencent.matrix.javalib.util.Log
 import com.tencent.matrix.javalib.util.Pair

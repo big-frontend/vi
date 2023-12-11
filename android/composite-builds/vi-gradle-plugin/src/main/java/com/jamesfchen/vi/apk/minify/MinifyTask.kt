@@ -1,11 +1,11 @@
 package com.jamesfchen.vi.apk.minify
 
 import com.android.build.gradle.api.BaseVariant
-import com.android.utils.FileUtils
+import com.jamesfchen.vi.FileUtils
 import com.jamesfchen.vi.findApksigner
 import com.jamesfchen.vi.findZipalign
 import com.tencent.matrix.javalib.util.Log
-import com.tencent.matrix.plugin.compat.AgpCompat
+import com.jamesfchen.vi.compat.AgpCompat
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
@@ -36,8 +36,8 @@ open class MinifyTask @Inject constructor(
         const val RES_GUARD_MAPPING_FILE_NAME = "resguard-mapping.txt"
     }
 
-    val signingConfig = AgpCompat.getSigningConfig(variant)
-    val pathOfZipAlign by lazy {
+    private val signingConfig = AgpCompat.getSigningConfig(variant)
+    private val pathOfZipAlign by lazy {
         val z = project.findZipalign()
         // Validate path of Zipalign tool
         if (!z.exists()) {
@@ -69,7 +69,7 @@ open class MinifyTask @Inject constructor(
             Log.i(TAG, "cost time %f s", (System.currentTimeMillis() - startTime) / 1000.0f)
         }
     }
-    lateinit var  apkAnalyzer: ApkAnalyzer
+    private lateinit var  apkAnalyzer: ApkAnalyzer
 
     private fun minify(originalApkFile: File) {
         signingConfig ?: return

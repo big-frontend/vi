@@ -1,5 +1,4 @@
 package com.jamesfchen.vi;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 import java.util.HashMap;
