@@ -32,35 +32,35 @@ export default [
       },
     ],
   },
-  {
-    name: 'innereye',
-    icon: 'MonitorOutlined',
-    path: '/innereye',
-    component: './InnerEyePage',
-  },
-  {
-    name: 'oapm',
-    icon: 'MonitorOutlined',
-    path: '/oapm',
-    component: './OapmPage',
-  },
-  {
-    name: 'stability',
-    icon: 'BugOutlined',
-    path: '/stability',
-    routes: [
-      {
-        name: 'eap',
-        path: '/stability/eap',
-        component: './EapCrashPage',
-      },
-      {
-        name: 'bugly',
-        path: '/stability/bugly',
-        component: './BuglyCrashPage',
-      },
-    ],
-  },
+  // {
+  //   name: 'innereye',
+  //   icon: 'MonitorOutlined',
+  //   path: '/innereye',
+  //   component: './InnerEyePage',
+  // },
+  // {
+  //   name: 'oapm',
+  //   icon: 'MonitorOutlined',
+  //   path: '/oapm',
+  //   component: './OapmPage',
+  // },
+  // {
+  //   name: 'stability',
+  //   icon: 'BugOutlined',
+  //   path: '/stability',
+  //   routes: [
+  //     {
+  //       name: 'eap',
+  //       path: '/stability/eap',
+  //       component: './EapCrashPage',
+  //     },
+  //     {
+  //       name: 'bugly',
+  //       path: '/stability/bugly',
+  //       component: './BuglyCrashPage',
+  //     },
+  //   ],
+  // },
   // {
   //   name: 'net',
   //   icon: 'GlobalOutlined',

@@ -12,12 +12,18 @@ buildscript {
         mavenCentral()
         gradlePluginPortal()
     }
+    dependencies {
+        val booster_version = "4.16.3"
+        classpath("com.didiglobal.booster:booster-gradle-plugin:$booster_version")
+        classpath("io.github.jamesfchen:booster-task-apkanalyser:1.0.0-SNAPSHOT")
+    }
 }
 plugins {
     id("com.android.application") version "7.4.1" apply false
     id("com.android.library") version "7.4.1" apply false
     id("org.jetbrains.kotlin.android") version "1.8.22" apply false
-    id("io.github.jamesfchen.vi-plugin") apply false
+//    id("io.github.jamesfchen.vi-plugin") apply false
+    id("org.jetbrains.kotlin.jvm") version "1.9.10" apply false
 }
 allprojects {
 //    tasks.withType(JavaCompile::class.java).configureEach { task ->

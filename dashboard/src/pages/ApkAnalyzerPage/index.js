@@ -17,29 +17,6 @@ const tabs = [
         closable: false,
         url: 'c'
     },
-    // {
-    //     tab: '基础组件',
-    //     key: 'fwk',
-    //     closable: false,
-    // },
-    // {
-    //     tab: '快应用组件',
-    //     key: 'quickapp',
-    //     closable: false,
-    // },
-    // {
-    //     tab: '快游戏组件',
-    //     key: 'quickgame',
-    //     closable: false,
-    // },
-    // {
-    //     tab: 'gemini(联盟chimera)组件',
-    //     key: 'gemini',
-    // },
-    // {
-    //     tab: '百度小程序组件',
-    //     key: 'baidusmartapp',
-    // },
 ]
 function ApkAnalyzer() {
     const [curVersion, setCurVersion] = useState(0)
@@ -383,12 +360,12 @@ function ApkAnalyzer() {
                             </Panel>
                         }
                         {task8?.uncompressed_file_types?.length > 0 &&
-                            <Panel header={`${task8?.task_description}\t\t数量:${task8?.uncompressed_file_types?.length} 最大可减:${max_reduce_size8.toFixed(2)}k`} key={task8?.task_type}>
+                            <Panel header={`${task8?.task_description}\t\t数量:${task8?.uncompressed_file_types?.length} 最大可减:${max_reduce_size8.toFixed(2)}k 某个文件类型的所有文件都没有经过压缩，可以考虑是否需要压缩`} key={task8?.task_type}>
                                 {task8?.uncompressed_file_types?.map((e) => <p>{e.suffix}  {(e.total_size / 1024).toFixed(2)}k</p>)}
                             </Panel>
                         }
                         {task6?.non_alpha_pngs?.length > 0 &&
-                            <Panel header={`${task6?.task_description}\t\t数量:${task6?.non_alpha_pngs?.length} 最大可减:${max_reduce_size6.toFixed(2)}k`} key={task6?.task_type}>
+                            <Panel header={`${task6?.task_description}\t\t数量:${task6?.non_alpha_pngs?.length} 最大可减:${max_reduce_size6.toFixed(2)}k 对于不含alpha通道的png文件，可以转成jpg格式来减少文件的大小`} key={task6?.task_type}>
                                 {task6?.non_alpha_pngs?.map((e) => <p>{e.entry_name}  {(e.entry_size / 1024).toFixed(2)}k</p>)}
                             </Panel>
                         }

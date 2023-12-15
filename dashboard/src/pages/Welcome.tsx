@@ -3,8 +3,8 @@ import { Card, Image } from 'antd';
 import React from 'react';
 import apmextension from '../assets/apmextension.png';
 import loadextension from '../assets/loadextension.png';
-import apm from '../assets/apm.png';
-import apmpath from '../assets/apmpath.png';
+// import apm from '../assets/apm.png';
+// import apmpath from '../assets/apmpath.png';
 
 /**
  * 每个单独的卡片，为了复用样式抽成了组件
@@ -149,20 +149,21 @@ const Welcome: React.FC = () => {
           width={600}
           height={200}
           src={loadextension}
-        /> <Image
+        />
+         {/* <Image
           width={600}
           height={100}
           src={apmpath}
-        />
+        /> */}
         <Image
           width={500}
           height={300}
           src={apmextension}
         />
-        <Image
+        {/* <Image
           height={400}
           src={apm}
-        />
+        /> */}
       </ProCard>
     </PageContainer>
   );

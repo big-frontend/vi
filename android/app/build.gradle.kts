@@ -1,9 +1,18 @@
 plugins {
     id("com.android.application")
+    id("com.didiglobal.booster")
     id("org.jetbrains.kotlin.android")
 }
-apply(from = "${rootDir}/apm_config.gradle")
+//apply(from = "${rootDir}/apm_config.gradle")
 android {
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("${rootDir}/key.jks")
+            storePassword = "123456"
+            keyAlias = "key0"
+            keyPassword = "123456"
+        }
+    }
     namespace = "com.jamesfchen.vi"
     compileSdk = 34
     buildToolsVersion ="30.0.2"
@@ -16,11 +25,20 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig = signingConfigs.getByName("debug")
     }
 
     buildTypes {
-        release {
+        debug{
             isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
