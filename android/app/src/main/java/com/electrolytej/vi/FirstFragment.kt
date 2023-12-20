@@ -1,4 +1,4 @@
-package com.jamesfchen.vi
+package com.electrolytej.vi
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import com.jamesfchen.vi.R
 import com.jamesfchen.vi.databinding.FragmentFirstBinding
 
 /**
@@ -35,6 +36,10 @@ class FirstFragment : Fragment() {
         binding.buttonFirst.setOnClickListener {
             findNavController().navigate(R.id.action_FirstFragment_to_SecondFragment)
         }
+        val aaid = resources.getIdentifier("aa", "string", requireActivity().packageName)
+        binding.buttonAa.setText(aaid)
+        val tmpid = resources.getIdentifier("tmp", "drawable", requireActivity().packageName)
+        binding.buttonTmp.setImageResource(tmpid)
     }
 
     override fun onDestroyView() {

@@ -1,4 +1,4 @@
-package com.jamesfchen.vi
+package com.electrolytej.vi
 
 import android.os.Bundle
 import com.google.android.material.snackbar.Snackbar
@@ -10,6 +10,7 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
+import com.jamesfchen.vi.R
 import com.jamesfchen.vi.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {

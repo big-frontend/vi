@@ -28,10 +28,10 @@ dependencyResolutionManagement {
 includeBuild("composite-builds")
 include(":app")
 include(
-    ":apk:vi-task-matrix-apkchecker",
     ":apk:matrix-apk-canary",
     ":apk:matrix-arscutil",
     ":apk:matrix-commons",
+    ":apk:vi-task-matrix-apkchecker",
     ":apk:vi-apksize-lint",
     ":apk:vi-lint-rules",
 

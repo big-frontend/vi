@@ -4,13 +4,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FirstFragment">
+    tools:context="com.electrolytej.vi.FirstFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="16dp">
-
+        <ImageView
+            android:id="@+id/button_tmp"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintBottom_toTopOf="@id/textview_first"
+            app:layout_constraintRight_toLeftOf="@id/button_aa"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <Button
+            android:id="@+id/button_aa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="a"
+            app:layout_constraintBottom_toTopOf="@id/textview_first"
+            app:layout_constraintRight_toLeftOf="@id/button_first"
+            app:layout_constraintLeft_toRightOf="@id/button_tmp"
+            app:layout_constraintTop_toTopOf="parent" />
         <Button
             android:id="@+id/button_first"
             android:layout_width="wrap_content"
