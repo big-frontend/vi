@@ -24,7 +24,7 @@
         {"name": "-countR"},
         {"name": "-duplicatedFile"},
         {
-            "--rTxt": "android\\app\\build\\intermediates\\runtime_symbol_list\\devPhoneRelease\\R.txt",
+            "--rTxt": "E:\\CrossPlatformProject\\vi\\android\\app\\build\\intermediates\\runtime_symbol_list\\debug\\R.txt",
             "name": "-unusedResources",
             "--ignoreResources": [
                 "R.raw.*",
@@ -46,7 +46,6 @@
                 "R.drawable.menubar_home_colour_img",
                 "R.drawable.menubar_home_colour_img_dark",
                 "R.drawable.menubar_point_ever_save",
-
                 "R.drawable.menubar_feedback_img",
                 "R.drawable.menubar_feedback_img_dark",
                 "R.drawable.menubar_feedback_img_top",
@@ -76,17 +75,17 @@
         {"name": "-checkMultiLibrary"},
         {
             "name": "-checkMultiSTL",
-            "--toolnm": "E:\\Sdk\\ndk-bundle\\toolchains\\aarch64-linux-android-4.9\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android-nm.exe"
+            "--toolnm": "E:\\Sdk\\ndk\\22.0.7026061\\toolchains\\aarch64-linux-android-4.9\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android-nm.exe"
         },
         {
             "name": "-unstrippedSo",
-            "--toolnm": "E:\\Sdk\\ndk-bundle\\toolchains\\aarch64-linux-android-4.9\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android-nm.exe"
+            "--toolnm": "E:\\Sdk\\ndk\\22.0.7026061\\toolchains\\aarch64-linux-android-4.9\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android-nm.exe"
         }
     ],
     "--format": "mm.html,mm.json",
-    "--mappingTxt": "android\\app\\build\\outputs\\mapping\\devPhoneRelease\\mapping.txt",
-    "--apk": "android\\app\\build\\outputs\\apk\\devPhone\\release\\InstantToolkitPhone_6.6.0_a901014_230310.apk",
-    "--output": "android\\app\\build/outputs/apk-checker-result",
+    "--mappingTxt": "E:\\CrossPlatformProject\\vi\\android\\app\\build\\outputs\\mapping\\release\\mapping.txt",
+    "--apk": "E:\\CrossPlatformProject\\vi\\android\\app\\build\\outputs\\apk\\debug\\app-debug.apk",
+    "--output": "E:\\CrossPlatformProject\\vi\\android\\app\\build/outputs/apk-checker-result",
     "--formatConfig": [{
         "name": "-countMethod",
         "group": [

@@ -62,8 +62,6 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN_VERSION}")
     implementation("com.squareup.okhttp3:okhttp:3.14.0")
     testImplementation("junit:junit:4.13.2")
-    implementation(project(":apk:matrix-commons"))
-    implementation(project(":apk:matrix-arscutil"))
     testRuntimeOnly(
             files(
                     serviceOf<ModuleRegistry>()

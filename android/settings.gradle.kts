@@ -1,6 +1,5 @@
 pluginManagement {
     repositories {
-        maven { url = uri("./local-repo") }
         mavenLocal()
         maven { url = uri("https://s01.oss.sonatype.org/content/repositories/public") }
         maven { url = uri("https://maven.oschina.net/content/groups/public/") }
@@ -13,9 +12,8 @@ pluginManagement {
     }
 }
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+//    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
-        maven { url = uri("./local-repo") }
         mavenLocal()
         maven { url = uri("https://s01.oss.sonatype.org/content/repositories/public") }
         maven { url = uri("https://maven.oschina.net/content/groups/public/") }
@@ -29,3 +27,21 @@ dependencyResolutionManagement {
 }
 includeBuild("composite-builds")
 include(":app")
+include(
+    ":apk:vi-task-matrix-apkchecker",
+    ":apk:matrix-apk-canary",
+    ":apk:matrix-arscutil",
+    ":apk:matrix-commons",
+    ":apk:vi-apksize-lint",
+    ":apk:vi-lint-rules",
+
+)
+include(
+    ":startup:startup-gradle-plugin",
+    ":startup:startup-api",
+    ":startup:tasklist-composer"
+)
+include(":stability:breakpad")
+include( ":vi-api")
+include(":vi-lint-rules")
+include(":startup:vi-transform-startup")
