@@ -32,6 +32,7 @@ include(
     ":apk:matrix-arscutil",
     ":apk:matrix-commons",
     ":apk:vi-task-matrix-apkchecker",
+    ":apk:vi-task-duplicated-files",
     ":apk:vi-apksize-lint",
     ":apk:vi-lint-rules",
 
