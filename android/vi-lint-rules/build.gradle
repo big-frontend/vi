@@ -32,8 +32,8 @@ dependencies {
 
     compileOnly("org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN_VERSION}")
 }
-sourceCompatibility = "1.8"
-targetCompatibility = "1.8"
+sourceCompatibility = "11"
+targetCompatibility = "11"
 jar {
     manifest {
         attributes("Lint-Registry": "com.jamesfchen.lint.IssueRegistry")

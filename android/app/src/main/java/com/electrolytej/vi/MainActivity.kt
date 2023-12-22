@@ -10,8 +10,8 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
-import com.jamesfchen.vi.R
-import com.jamesfchen.vi.databinding.ActivityMainBinding
+import com.electrolytej.vi.R
+import com.electrolytej.vi.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 

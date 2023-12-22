@@ -23,6 +23,7 @@ dependencies {
     implementation("com.didiglobal.booster:booster-graph-dot:4.16.3")
     implementation("com.didiglobal.booster:booster-graph-json:4.16.3")
     implementation("com.didiglobal.booster:booster-transform-asm:4.16.3")
+    implementation("io.github.jamesfchen:base-plugin:1.2.1")
     compileOnly(gradleApi())
     compileOnly("com.android.tools.build:gradle:${AGP_VERSION}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN_VERSION}")

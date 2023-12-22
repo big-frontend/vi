@@ -13,12 +13,12 @@ android {
             keyPassword = "123456"
         }
     }
-    namespace = "com.jamesfchen.vi"
+    namespace = "com.electrolytej.vi"
     compileSdk = 34
     buildToolsVersion ="30.0.2"
 
     defaultConfig {
-        applicationId = "com.jamesfchen.vi"
+        applicationId = "com.electrolytej.vi"
         minSdk = 21
         targetSdk = 34
         versionCode = 1

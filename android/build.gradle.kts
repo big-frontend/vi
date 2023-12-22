@@ -1,3 +1,5 @@
+import org.gradle.api.tasks.testing.logging.TestExceptionFormat
+
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
@@ -44,16 +46,22 @@ allprojects {
         mavenCentral()
         gradlePluginPortal()
     }
-//    tasks.withType(JavaCompile::class.java).configureEach { task ->
-//        task.options.encoding = 'UTF-8'
-//        task.sourceCompatibility = JavaVersion.VERSION_11
-//        task.targetCompatibility = JavaVersion.VERSION_11
-//    }
-//    tasks.withType(org.jetbrains.kotlin.gradle.dsl.KotlinJvmCompile::class.java).configureEach { task ->
-//        task.kotlinOptions {
-//            jvmTarget = '1.8'
-//        }
-//    }
+
+    tasks.withType<JavaCompile> {
+        sourceCompatibility = JavaVersion.VERSION_11.majorVersion
+        targetCompatibility = JavaVersion.VERSION_11.majorVersion
+    }
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions { jvmTarget = JavaVersion.VERSION_11.majorVersion }
+    }
+    tasks.withType<Test>().configureEach {
+        testLogging {
+            exceptionFormat = TestExceptionFormat.FULL
+            showExceptions = true
+            showCauses = true
+            showStackTraces = true
+        }
+    }
 }
 
 tasks.register("clean", Delete::class.java) {

@@ -36,13 +36,18 @@ include(
     ":apk:vi-apksize-lint",
     ":apk:vi-lint-rules",
 
+    )
+include(
+    ":startup:vi-startup-monitor",
+    ":startup:vi-tasklist-composer-api",
 )
 include(
-    ":startup:startup-gradle-plugin",
-    ":startup:startup-api",
-    ":startup:tasklist-composer"
+    ":render:vi-render-monitor"
 )
-include(":stability:breakpad")
-include( ":vi-api")
+include(
+    ":stability:breakpad",
+    ":stability:vi-task-bugly"
+)
+include(":vi-api")
 include(":vi-lint-rules")
 include(":startup:vi-transform-startup")

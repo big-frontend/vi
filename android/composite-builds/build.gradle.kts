@@ -19,9 +19,6 @@ buildscript {
         classpath("io.github.jamesfchen:module-publisher-plugin:1.4.3")
     }
 }
-//plugins {
-//    id("com.jamesfchen.perf-plugin") version "1.0.0" apply false
-//}
 allprojects {
     repositories {
         mavenLocal()
