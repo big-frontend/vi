@@ -27,27 +27,28 @@ dependencyResolutionManagement {
 }
 includeBuild("composite-builds")
 include(":app")
+include(":vi-api")
+include(":vi-lint-rules")
 include(
     ":apk:matrix-apk-canary",
     ":apk:matrix-arscutil",
     ":apk:matrix-commons",
-    ":apk:vi-task-matrix-apkchecker",
-    ":apk:vi-task-duplicated-files",
-    ":apk:vi-apksize-lint",
+    ":apk:vi-monitor-matrix-apkchecker",
+    ":apk:vi-optimizer-duplicated-files",
+    ":apk:vi-linter-apksize",
     ":apk:vi-lint-rules",
-
-    )
-include(
-    ":startup:vi-startup-monitor",
-    ":startup:vi-tasklist-composer-api",
 )
 include(
-    ":render:vi-render-monitor"
+    ":startup:vi-monitor-startup",
+    ":startup:vi-optimizer-tasklist-composer",
+    ":startup:vi-optimizer-startup"
+)
+include(
+    ":render:vi-monitor-render"
 )
 include(
     ":stability:breakpad",
-    ":stability:vi-task-bugly"
+    ":stability:vi-monitor-bugly",
+    ":stability:vi-monitor-anr",
 )
-include(":vi-api")
-include(":vi-lint-rules")
-include(":startup:vi-transform-startup")
+

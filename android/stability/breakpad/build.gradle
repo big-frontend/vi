@@ -1,14 +1,14 @@
 apply plugin: "io.github.jamesfchen.module-publisher-plugin"
 publish {
     name = "breakpad"
-    groupId = rootProject.groupId
+    groupId = rootProject.GROUP_ID
     artifactId = "breakpad"
     version = '1.0.0'
     website = "https://github.com/JamesfChen/spacecraft-android"
 }
 apply from: "$rootDir/aar.gradle"
 android{
-    ndkVersion  rootProject.ndkVersion
+    ndkVersion  rootProject.NDK_VERSION
     defaultConfig{
         externalNativeBuild {
             cmake {

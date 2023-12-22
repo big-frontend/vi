@@ -2,8 +2,6 @@ plugins {
     id("java-library")
     id("org.jetbrains.kotlin.jvm")
 }
-setGroup(rootProject.groupId)
-setVersion(rootProject.VI_LINT_RULES_VERSION)
 apply plugin: 'com.android.lint'
 lintOptions {
     htmlReport true
@@ -16,9 +14,9 @@ apply plugin: 'maven-publish'
 publishing {
     publications {
         viLintRules(MavenPublication) {
-            groupId rootProject.groupId
+            groupId rootProject.GROUP_ID
             artifactId "vi-lint-rules"
-            version  rootProject.VI_LINT_RULES_VERSION
+            version  "1.0.0"
             afterEvaluate {
                 from components.java
             }

@@ -1,14 +1,14 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 android {
-    compileSdkVersion Integer.parseInt(rootProject.compileSdkVersion)
-    buildToolsVersion rootProject.buildToolsVersion
+    compileSdkVersion Integer.parseInt(rootProject.COMPILE_SDK_VERSION)
+    buildToolsVersion rootProject.BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion Integer.parseInt(rootProject.minSdkVersion)
-        targetSdkVersion Integer.parseInt(rootProject.targetSdkVersion)
-        versionCode Integer.parseInt(rootProject.versionCode)
-        versionName rootProject.versionName
+        minSdkVersion Integer.parseInt(rootProject.MIN_SDK_VERSION)
+        targetSdkVersion Integer.parseInt(rootProject.TARGET_SDK_VERSION)
+        versionCode Integer.parseInt(rootProject.VERSION_CODE)
+        versionName rootProject.VERSION_NAME
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

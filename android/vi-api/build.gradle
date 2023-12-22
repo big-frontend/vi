@@ -1,7 +1,7 @@
 apply plugin: "io.github.jamesfchen.module-publisher-plugin"
 publish {
     name = "vi-api"
-    groupId = rootProject.groupId
+    groupId = rootProject.GROUP_ID
     artifactId = "vi-api"
     version = "1.0.0"
     website = "https://github.com/big-frontend/pisces"
@@ -9,40 +9,38 @@ publish {
 apply from: "$rootDir/aar.gradle"
 android {
     namespace = "com.electrolytej.vi"
-//    ndkVersion  = "25.0.8775105"
+    ndkVersion = rootProject.NDK_VERSION
     defaultConfig {
-//        externalNativeBuild {
-//            cmake {
-//                // issue:No compatible library found for //fbjni/fbjni Rejected the following libraries:
-//                // The issue is that apps are configured to use the static STL by default. You cannot link against both the static and shared STL so you need to change your app to use the shared STL.
-//                // 解决方案加入 arguments "-DANDROID_STL=c++_shared"
-//                arguments += listOf(
-//                    "-DANDROID_STL=c++_shared",
-//                    "-DANDROID_TOOLCHAIN=clang",
-//                    "-DANDROID_ARM_NEON=TRUE"
-//                )
-//                cFlags += listOf("-D__STDC_FORMAT_MACROS")
-//                //https://zhuanlan.zhihu.com/p/72475595
-//                cppFlags += listOf(
-//                    "-s"/*去除so lib 的符号表（libguard shrink之后的size2139k -->283k 7倍）*/,
-//                    "-fvisibility=hidden",
-//                    "-ffunction-sections",
-//                    "-fdata-sections",
-//                    "-std=c++14"
-//                )
-//                abiFilters += listOf("arm64-v8a", "armeabi-v7a")
-//            }
-//        }
+        externalNativeBuild {
+            cmake {
+                // issue:No compatible library found for //fbjni/fbjni Rejected the following libraries:
+                // The issue is that apps are configured to use the static STL by default. You cannot link against both the static and shared STL so you need to change your app to use the shared STL.
+                // 解决方案加入 arguments "-DANDROID_STL=c++_shared"
+                arguments += [
+                        "-DANDROID_STL=c++_shared",
+                        "-DANDROID_TOOLCHAIN=clang",
+                        "-DANDROID_ARM_NEON=TRUE"
+                ]
+                cFlags += ["-D__STDC_FORMAT_MACROS"]
+                //https://zhuanlan.zhihu.com/p/72475595
+                cppFlags += [
+                        "-s"/*去除so lib 的符号表（libguard shrink之后的size2139k -->283k 7倍）*/,
+                        "-fvisibility=hidden",
+                        "-ffunction-sections",
+                        "-fdata-sections",
+                        "-std=c++14"
+                ]
+                abiFilters += ["arm64-v8a", "armeabi-v7a"]
+            }
+        }
     }
-//    externalNativeBuild {
-
-    // Encapsulates your CMake build configurations.
-//        cmake {
-//
-//            // Provides a relative path to your CMake build script.
-//            path = file("CMakeLists.txt")
-//        }
-//    }
+    externalNativeBuild {
+        // Encapsulates your CMake build configurations.
+        cmake {
+            // Provides a relative path to your CMake build script.
+            path = file("CMakeLists.txt")
+        }
+    }
     buildFeatures {
         prefab = true
         prefabPublishing = true
