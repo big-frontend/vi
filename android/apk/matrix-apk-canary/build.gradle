@@ -1,8 +1,11 @@
 import org.gradle.api.internal.artifacts.configurations.DefaultConfiguration
 
-apply plugin: 'java'
+plugins {
+    id("java-library")
+    id("io.johnsonlee.sonatype-publish-plugin")
+}
 version "2.0.8"
-//group rootProject.ext.GROUP
+group = "com.tencent.mm"
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')

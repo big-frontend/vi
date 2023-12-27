@@ -3,32 +3,35 @@ package com.electrolytej.vi
 import com.android.SdkConstants
 import com.android.build.gradle.api.BaseVariant
 import com.android.build.gradle.internal.tasks.factory.dependsOn
-import com.didiglobal.booster.build.Build
-import com.didiglobal.booster.compression.CompressionReport
-import com.didiglobal.booster.compression.CompressionResult
-import com.didiglobal.booster.compression.CompressionResults
+import com.didiglobal.booster.gradle.getProperty
+import com.didiglobal.booster.gradle.getReport
 import com.didiglobal.booster.gradle.processResTaskProvider
 import com.didiglobal.booster.gradle.processedRes
 import com.didiglobal.booster.gradle.project
-import com.didiglobal.booster.kotlinx.file
+import com.didiglobal.booster.gradle.symbolList
+import com.didiglobal.booster.kotlinx.Wildcard
 import com.didiglobal.booster.kotlinx.search
 import com.didiglobal.booster.kotlinx.touch
 import com.didiglobal.booster.task.spi.VariantProcessor
-import com.didiglobal.booster.transform.util.transform
 import com.google.auto.service.AutoService
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
+import com.tencent.mm.arscutil.io.ArscReader
+import com.tencent.mm.arscutil.io.ArscWriter
 import org.gradle.api.DefaultTask
+import org.gradle.api.logging.Logging
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import java.io.File
+import java.io.PrintWriter
 import java.text.DecimalFormat
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 
+private val logger_ = Logging.getLogger(DuplicatedFilesVariantProcessor::class.java)
+
 @AutoService(VariantProcessor::class)
 class DuplicatedFilesVariantProcessor : VariantProcessor {
     override fun process(variant: BaseVariant) {
-        val compress = variant.project.tasks.register(
+        val removeDuplicatedFiles = variant.project.tasks.register(
             "remove${variant.name.capitalize()}DuplicatedFiles", RemoveDuplicatedFiles::class.java
         ) {
             it.group = "booster"
@@ -36,12 +39,11 @@ class DuplicatedFilesVariantProcessor : VariantProcessor {
             it.variant = variant
         }
         variant.processResTaskProvider?.let { processRes ->
-            compress.dependsOn(processRes)
+            removeDuplicatedFiles.dependsOn(processRes)
             processRes.configure {
-                it.finalizedBy(compress)
+                it.finalizedBy(removeDuplicatedFiles)
             }
         }
-
     }
 }
 
@@ -49,119 +51,202 @@ internal abstract class RemoveDuplicatedFiles : DefaultTask() {
 
     @get:Internal
     lateinit var variant: BaseVariant
+    private lateinit var symbols: SymbolList
+    private lateinit var logger: PrintWriter
+    private val PROPERTY_IGNORES = "vi.optimizer.duplicated.files.ignores"
+    private lateinit var ignores: Set<Wildcard>
 
     @TaskAction
-    fun compress() {
-        val mapOfDuplicatesReplacements: MutableMap<String, String> = HashMap()
-        //1.find duplicated files
-        variant.findDuplicatedFiles(mapOfDuplicatesReplacements)
-        //2.remove duplicated files
-        removeDuplicatedFiles(mapOfDuplicatesReplacements)
+    fun remove() {
+        this.symbols = SymbolList.from(variant.symbolList.single())
+        this.ignores = project.getProperty(PROPERTY_IGNORES, "").trim().split(',')
+            .filter(String::isNotEmpty)
+            .map(Wildcard.Companion::valueOf).toSet()
 
-//        val results = CompressionResults()
-//        variant.compressProcessedRes(results)
-//        variant.generateReport(results)
+        this.logger = variant.getReport("vi-optimizer-duplicated-files", "report.txt").touch().printWriter()
+        logger.use {
+            if (this.symbols.isEmpty()) {
+                logger_.error("remove duplicated files failed: R.txt doesn't exist or blank")
+                logger.println("Inlining R symbols failed: R.txt doesn't exist or blank")
+                return
+            }
+            logger.println("$PROPERTY_IGNORES=$ignores\n")
+            val files = variant.processedRes.search {
+                it.name.startsWith(SdkConstants.FN_RES_BASE) && it.extension == SdkConstants.EXT_RES
+            }
+            files.parallelStream().forEach { ap_ ->
+                //    val dest = File.createTempFile(SdkConstants.FN_RES_BASE + SdkConstants.RES_QUALIFIER_SEP, SdkConstants.DOT_RES)
+                //1.find duplicated files from ap file
+                val mapOfDuplicatesReplacements = mutableMapOf<String, Triple<Long, Long, String>>()
+                ZipFile(ap_).use {
+                    it.findDuplicatedFiles {
+                        filter = { entry ->
+                            val ign = ignores.any { it.matches(entry.name) }
+                            if (ign) {
+                                logger.println("Ignore `${entry.name}`")
+                            }
+                            entry.name.startsWith("res/") && !ign
+                        }
+                        foreach = { dup, replace ->
+                            mapOfDuplicatesReplacements[dup.name] =
+                                Triple(dup.crc, dup.size, replace.name)
+                        }
+                    }
+                }
+                if (mapOfDuplicatesReplacements.isNotEmpty()) {
+                    //2.remove duplicated files  and repack ap file
+                    val s0 = ap_.length()
+                    val total = ap_.removeDuplicatedFiles(symbols, mapOfDuplicatesReplacements)
+                    val s1 = ap_.length()
+                    logger.println("Delete files:")
+                    mapOfDuplicatesReplacements.forEach { dup, (crc32, size, replace) ->
+                        logger.println(" * replace $dup with $replace\t$size bytes $crc32")
+                    }
+                    val maxWidth = mapOfDuplicatesReplacements.map { it.key.length }.maxOrNull()?.plus(10) ?: 10
+                    logger.println("-".repeat(maxWidth))
+                    logger.println("Total: $total bytes, ap length: ${s0 - s1} bytes")
+                }
+            }
+        }
     }
 
-    fun removeDuplicatedFiles(mapOfDuplicatesReplacements: MutableMap<String, String> = HashMap()) {
-//        val replaceIterator = mapOfDuplicatesReplacements.keys.iterator()
-//        while (replaceIterator.hasNext()) {
-//            val sourceFile = replaceIterator.next()
-//            val sourceRes = ApkUtil.entryToResourceName(sourceFile)
-//            val sourceId = mapOfResources[sourceRes]!!
-//            val targetFile = mapOfDuplicatesReplacements[sourceFile]
-//            val targetRes = ApkUtil.entryToResourceName(targetFile)
-//            val targetId = mapOfResources[targetRes]!!
-//            val success = ArscUtil.replaceFileResource(resTable, sourceId, sourceFile, targetId, targetFile)
-//            if (!success) {
-////                Log.w(TAG, "replace %s(%s) with %s(%s) failed!", sourceRes, sourceFile, targetRes, targetFile)
-//                replaceIterator.remove()
+}
+
+const val ARSC_FILE_NAME = "resources.arsc"
+
+fun File.removeDuplicatedFiles(
+    symbols: SymbolList, mapOfDuplicatesReplacements: MutableMap<String, Triple<Long, Long, String>>
+): Long {
+    val shrunkApFile = File(parent, "${name}_shrunk")
+    shrunkApFile.deleteRecursivelyIfExists()
+    shrunkApFile.mkdir()
+    val arscFile = File(shrunkApFile, ARSC_FILE_NAME)
+    var total = 0L
+    val compressedEntry = HashSet<String>()
+    ZipFile(this).use { zipInputFile ->
+        zipInputFile.extractEntry(arscFile, ARSC_FILE_NAME)
+        val reader = ArscReader(arscFile.canonicalPath)
+        val resTable = reader.readResourceTable()
+//    logger_.warn("Delete files:")
+//    val maxWidth = mapOfDuplicatesReplacements.map { it.key.length }.maxOrNull()?.plus(10) ?: 10
+        val replaceIterator = mapOfDuplicatesReplacements.keys.iterator()
+        while (replaceIterator.hasNext()) {
+            val srcEntryName = replaceIterator.next()
+            val (srcResId, srcResType, srcResName) = srcEntryName.entryToResource()
+            val srcResIdInt = symbols.getInt(srcResType, srcResName)
+            val (crc32, size, destEntryName) = mapOfDuplicatesReplacements[srcEntryName] ?: continue
+            val (destResId, destResType, destResName) = destEntryName.entryToResource()
+            val destResIdInt = symbols.getInt(destResType, destResName)
+
+            val success = com.tencent.mm.arscutil.ArscUtil.replaceFileResource(
+                resTable, srcResIdInt, srcEntryName, destResIdInt, destEntryName
+            )
+            if (!success) {
+//            logger.println("replace ${srcResId}($srcEntryName) with $destResId($destEntryName) failed!")
+                logger_.error("replace ${srcResId}($srcEntryName) with $destResId($destEntryName) failed!")
+                replaceIterator.remove()
+            } else {
+//            logger_.warn(" - replace $srcEntryName with $destEntryName\t$size bytes $crc32")
+                total += size
+            }
+        }
+
+//    logger_.warn("-".repeat(maxWidth))
+//    logger_.warn("Total: $total bytes")
+
+        val destArscFile = File(shrunkApFile, "shrinked_${ARSC_FILE_NAME}")
+        val writer = ArscWriter(destArscFile.canonicalPath)
+        writer.writeResTable(resTable)
+        if (arscFile.delete()) {
+            if (!destArscFile.renameTo(arscFile)) {
+                destArscFile.copyTo(arscFile, overwrite = true)
+            }
+        }
+
+        zipInputFile.extractEntries {
+            destDir = shrunkApFile
+            filter = { zipEntry ->
+                !mapOfDuplicatesReplacements.containsKey(zipEntry.name) && zipEntry.name != ARSC_FILE_NAME
+            }
+            foreach = { zipEntry, destFile ->
+                if (zipEntry.name.startsWith("res/")) {
+                    val (s, s1, s2) = zipEntry.entryToResource()
+                    if (s.isNotEmpty()) {
+                        if (zipEntry.method == ZipEntry.DEFLATED) {
+                            compressedEntry.add(zipEntry.name)
+                        }
+//                    logger_.warn("unzip ${zipEntry.name} to file ${destFile}")
+                    } else {
+                        logger_.error("parse entry ${zipEntry.name} resource name failed!")
+                    }
+                } else {
+                    if (zipEntry.method == ZipEntry.DEFLATED) {
+                        compressedEntry.add(zipEntry.name)
+                    }
+//                logger_.warn("unzip ${zipEntry.name} to file ${destFile}")
+                }
+            }
+        }
+    }
+    val destFile = File(parentFile, "tmp")
+    shrunkApFile.zipFile(destFile) { zipEntry ->
+        compressedEntry.contains(zipEntry.name)
+    }
+    if (delete()) {
+        if (!destFile.renameTo(this)) {
+            destFile.copyTo(this, overwrite = true)
+        }
+    }
+    return total
+}
+
+fun File.deleteRecursivelyIfExists() {
+    if (!exists()) return
+    deleteRecursively()
+}
+
+//private fun BaseVariant.generateReport(results: CompressionResults) {
+//    val base = project.buildDir.toURI()
+//    val table = results.map {
+//        val delta = it.second - it.third
+//        CompressionReport(
+//            base.relativize(it.first.toURI()).path,
+//            it.second,
+//            it.third,
+//            delta,
+//            if (delta == 0L) "0" else decimal(delta),
+//            if (delta == 0L) "0%" else percentage((delta).toDouble() * 100 / it.second),
+//            decimal(it.second),
+//            it.fourth
+//        )
+//    }
+//    val maxWith1 = table.maxOfOrNull { it.first.length } ?: 0
+//    val maxWith5 = table.maxOfOrNull { it.fifth.length } ?: 0
+//    val maxWith6 = table.maxOfOrNull { it.sixth.length } ?: 0
+//    val maxWith7 = table.maxOfOrNull { it.seventh.length } ?: 0
+//    val fullWith = maxWith1 + maxWith5 + maxWith6 + 8
+//
+//    project.buildDir.file("reports", Build.ARTIFACT, name, "report.txt").touch().printWriter()
+//        .use { logger ->
+//            // sort by reduced size and original size
+//            table.sortedWith(compareByDescending<CompressionReport> {
+//                it.fourth
+//            }.thenByDescending {
+//                it.second
+//            }).forEach {
+//                logger.println(
+//                    "${it.sixth.padStart(maxWith6)} ${it.first.padEnd(maxWith1)} ${
+//                        it.fifth.padStart(
+//                            maxWith5
+//                        )
+//                    } ${it.seventh.padStart(maxWith7)} ${it.eighth}"
+//                )
 //            }
+//            logger.println("-".repeat(maxWith1 + maxWith5 + maxWith6 + 2))
+//            logger.println(" TOTAL ${decimal(table.sumOf { it.fourth.toDouble() }).padStart(fullWith - 13)}")
 //        }
-    }
-
-}
-
-private fun BaseVariant.findDuplicatedFiles(results: MutableMap<String, String> = HashMap()) {
-    val files = processedRes.search {
-        it.name.startsWith(SdkConstants.FN_RES_BASE) && it.extension == SdkConstants.EXT_RES
-    }
-    files.parallelStream().forEach { ap_ ->
-        val s0 = ap_.length()
-        ZipFile(ap_).use {
-            val asIterator = it.entries().asIterator()
-
-        }
-//        ap_.repack {
-//            !NO_COMPRESS.contains(it.name.substringAfterLast('.'))
-//        }
-        val s1 = ap_.length()
-//        results.add(CompressionResult(ap_, s0, s1, ap_))
-    }
-}
-
-private fun File.repack(shouldCompress: (ZipEntry) -> Boolean) {
-    val dest = File.createTempFile(
-        SdkConstants.FN_RES_BASE + SdkConstants.RES_QUALIFIER_SEP, SdkConstants.DOT_RES
-    )
-
-    ZipFile(this).use {
-        it.transform(dest, { origin: ZipEntry ->
-            ZipArchiveEntry(origin).apply {
-                method = if (shouldCompress(origin)) ZipEntry.DEFLATED else origin.method
-            }
-        })
-    }
-
-    if (this.delete()) {
-        if (!dest.renameTo(this)) {
-            dest.copyTo(this, true)
-        }
-    }
-}
-
-private fun BaseVariant.generateReport(results: CompressionResults) {
-    val base = project.buildDir.toURI()
-    val table = results.map {
-        val delta = it.second - it.third
-        CompressionReport(
-            base.relativize(it.first.toURI()).path,
-            it.second,
-            it.third,
-            delta,
-            if (delta == 0L) "0" else decimal(delta),
-            if (delta == 0L) "0%" else percentage((delta).toDouble() * 100 / it.second),
-            decimal(it.second),
-            it.fourth
-        )
-    }
-    val maxWith1 = table.maxOfOrNull { it.first.length } ?: 0
-    val maxWith5 = table.maxOfOrNull { it.fifth.length } ?: 0
-    val maxWith6 = table.maxOfOrNull { it.sixth.length } ?: 0
-    val maxWith7 = table.maxOfOrNull { it.seventh.length } ?: 0
-    val fullWith = maxWith1 + maxWith5 + maxWith6 + 8
-
-    project.buildDir.file("reports", Build.ARTIFACT, name, "report.txt").touch().printWriter()
-        .use { logger ->
-            // sort by reduced size and original size
-            table.sortedWith(compareByDescending<CompressionReport> {
-                it.fourth
-            }.thenByDescending {
-                it.second
-            }).forEach {
-                logger.println(
-                    "${it.sixth.padStart(maxWith6)} ${it.first.padEnd(maxWith1)} ${
-                        it.fifth.padStart(
-                            maxWith5
-                        )
-                    } ${it.seventh.padStart(maxWith7)} ${it.eighth}"
-                )
-            }
-            logger.println("-".repeat(maxWith1 + maxWith5 + maxWith6 + 2))
-            logger.println(" TOTAL ${decimal(table.sumOf { it.fourth.toDouble() }).padStart(fullWith - 13)}")
-        }
-
-}
+//
+//}
 
 internal val percentage: (Number) -> String = DecimalFormat("#,##0.00'%'")::format
 

@@ -1,8 +1,9 @@
-apply plugin: 'java'
-apply plugin: 'kotlin-kapt'
+plugins {
+    id("java-library")
+    id("io.johnsonlee.sonatype-publish-plugin")
+}
+group = "com.tencent.mm"
 version = '2.0.8'
-//group rootProject.ext.GROUP
-[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -13,8 +14,13 @@ dependencies {
     implementation 'com.google.guava:guava:24.1-jre'
     implementation 'com.google.code.findbugs:jsr305:3.0.2'
 }
-
 java {
     sourceCompatibility = JavaVersion.VERSION_11
     targetCompatibility = JavaVersion.VERSION_11
+}
+tasks.withType(Javadoc) {
+    failOnError false
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
 }

@@ -1,5 +1,3 @@
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     repositories {
@@ -22,9 +20,10 @@ buildscript {
         classpath("io.github.jamesfchen:module-publisher-plugin:1.4.3")
         val booster_version = "4.16.3"
         classpath("com.didiglobal.booster:booster-gradle-plugin:$booster_version")
-        classpath("com.didiglobal.booster:booster-transform-usage:$booster_version")
-        classpath("io.github.electrolytej:vi-task-matrix-apkchecker:1.0.0-SNAPSHOT")
-//        classpath("io.github.electrolytej:vi-transform-startup:1.0.0-SNAPSHOT")
+//        classpath("com.didiglobal.booster:booster-transform-usage:$booster_version")
+//        classpath("com.didiglobal.booster:booster-transform-r-inline:$booster_version")
+//        classpath("io.github.electrolytej:vi-task-matrix-apkchecker:1.0.0-SNAPSHOT")
+        classpath("io.github.electrolytej:vi-optimizer-duplicated-files:1.0.0-SNAPSHOT")
     }
 }
 plugins {
@@ -34,6 +33,8 @@ plugins {
 //    kotlin("jvm") version "1.8.22" apply false
     id("io.johnsonlee.sonatype-publish-plugin") version "1.7.0" apply false
     id("org.jetbrains.kotlin.jvm") version "1.8.22" apply false
+    id("io.johnsonlee.buildprops") version "1.2.0" apply false
+    id("com.github.johnrengelman.shadow") version "6.1.0" apply false
 }
 allprojects {
     repositories {
@@ -53,17 +54,28 @@ allprojects {
         sourceCompatibility = JavaVersion.VERSION_11.majorVersion
         targetCompatibility = JavaVersion.VERSION_11.majorVersion
     }
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-        kotlinOptions { jvmTarget = JavaVersion.VERSION_11.majorVersion }
-    }
     tasks.withType<Test>().configureEach {
         testLogging {
-            exceptionFormat = TestExceptionFormat.FULL
+            exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
             showExceptions = true
             showCauses = true
             showStackTraces = true
         }
     }
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions {
+            jvmTarget = JavaVersion.VERSION_11.majorVersion
+            apiVersion = "1.5"
+            freeCompilerArgs = listOf("-Xno-optimized-callable-references")
+        }
+    }
+//    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinTest>{
+//        kotlinOptions {
+//            jvmTarget = JavaVersion.VERSION_11.majorVersion
+//            apiVersion = "1.5"
+//            freeCompilerArgs = listOf("-Xno-optimized-callable-references")
+//        }
+//    }
 }
 
 tasks.register("clean", Delete::class.java) {

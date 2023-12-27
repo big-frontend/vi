@@ -1,17 +1,17 @@
-apply plugin: 'java'
+plugins {
+    id("java-library")
+    id("io.johnsonlee.sonatype-publish-plugin")
+}
 
+group = "com.tencent.mm"
 version = '2.0.8'
-//group rootProject.ext.GROUP
 
-[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
-
-
+//[compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'commons-io:commons-io:2.6'
 }
-
 
 java {
     sourceCompatibility = JavaVersion.VERSION_11

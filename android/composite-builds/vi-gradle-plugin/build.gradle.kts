@@ -5,7 +5,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 plugins {
     id("java-gradle-plugin")
     kotlin("plugin.serialization") version "1.4.20"
-    id("com.github.johnrengelman.shadow") version "6.1.0"
+
 }
 val AGP_VERSION :String by project
 val JAVASSIST_VERSION :String by project
@@ -40,8 +40,3 @@ dependencies {
     implementation("com.google.code.gson:gson:2.8.2")
 }
 
-tasks.register("shadowViJar", ShadowJar::class.java) {
-    classifier = "all"
-//    baseName = project.name
-//    version = project.version.toInt()
-}

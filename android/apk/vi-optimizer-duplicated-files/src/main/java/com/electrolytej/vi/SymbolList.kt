@@ -1,12 +1,5 @@
 package com.electrolytej.vi
 
-/**
- * Copyright ® $ 2023
- * All right reserved.
- *
- * @author: electrolyteJ
- * @since: Dec/25/2023  Mon
- */
 import java.io.File
 import java.util.Objects
 
