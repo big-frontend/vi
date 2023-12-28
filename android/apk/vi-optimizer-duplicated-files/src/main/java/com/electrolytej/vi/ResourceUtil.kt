@@ -1,7 +1,22 @@
 package com.electrolytej.vi
 
+import pink.madis.apk.arsc.ResourceFile
+import pink.madis.apk.arsc.ResourceTableChunk
+import pink.madis.apk.arsc.StringPoolChunk
 import java.util.zip.ZipEntry
+fun Int.getResourceTypeId(): Int {
+    val resourceId = this
+    return resourceId and 0x00FF0000 shr 16
+}
+fun Int.getResourceEntryId(): Int {
+    val resourceId = this
+    return resourceId and 0x0000FFFF
+}
 
+fun Int.getPackageId(): Int {
+    val resourceId = this
+    return resourceId and -0x1000000 shr 24
+}
 fun Collection<ZipEntry>.isSameResourceType(): Boolean {
     var resType = ""
     val it = this.iterator()
@@ -50,5 +65,29 @@ fun String.entryToResType(): String {
         }
     }
     return ""
+}
+
+
+fun ResourceFile.replaceFileResource(
+    sourceFile: String,
+    targetFile: String
+): Boolean {
+    chunks
+        .filterIsInstance<ResourceTableChunk>()
+        .forEach { chunk ->
+            val stringPoolChunk = chunk.stringPool
+            val index = stringPoolChunk.indexOf(sourceFile)
+            if (index != -1) {
+                stringPoolChunk.setString(index, targetFile)
+                return@replaceFileResource true
+            }
+        }
+    return false
+}
+fun StringPoolChunk.setString(index: Int, s: String) {
+    val stringsField = StringPoolChunk::class.java.getDeclaredField("strings")
+    stringsField.isAccessible = true
+    val stringsList = stringsField.get(this) as? java.util.ArrayList<String>
+    stringsList?.set(index, s)
 }
 

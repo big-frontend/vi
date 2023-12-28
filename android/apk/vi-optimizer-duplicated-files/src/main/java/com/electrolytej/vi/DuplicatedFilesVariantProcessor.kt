@@ -14,17 +14,18 @@ import com.didiglobal.booster.kotlinx.search
 import com.didiglobal.booster.kotlinx.touch
 import com.didiglobal.booster.task.spi.VariantProcessor
 import com.google.auto.service.AutoService
-import com.tencent.mm.arscutil.io.ArscReader
-import com.tencent.mm.arscutil.io.ArscWriter
 import org.gradle.api.DefaultTask
 import org.gradle.api.logging.Logging
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
+import pink.madis.apk.arsc.ResourceFile
 import java.io.File
+import java.io.FileInputStream
 import java.io.PrintWriter
 import java.text.DecimalFormat
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
+
 
 private val logger_ = Logging.getLogger(DuplicatedFilesVariantProcessor::class.java)
 
@@ -93,19 +94,24 @@ internal abstract class RemoveDuplicatedFiles : DefaultTask() {
                         }
                     }
                 }
+                val maxWidth = mapOfDuplicatesReplacements.map { it.key.length }.maxOrNull()?.plus(10) ?: 10
+                var total = 0L
+                val s0 = ap_.length()
+                logger.println("Delete files:")
                 if (mapOfDuplicatesReplacements.isNotEmpty()) {
                     //2.remove duplicated files  and repack ap file
-                    val s0 = ap_.length()
-                    val total = ap_.removeDuplicatedFiles(symbols, mapOfDuplicatesReplacements)
-                    val s1 = ap_.length()
-                    logger.println("Delete files:")
+                    total = ap_.removeDuplicatedFiles(symbols, mapOfDuplicatesReplacements)
                     mapOfDuplicatesReplacements.forEach { dup, (crc32, size, replace) ->
-                        logger.println(" * replace $dup with $replace\t$size bytes $crc32")
+                        val (srcResId, srcResType, srcResName) = dup.entryToResource()
+                        val srcResIdInt = symbols.getInt(srcResType, srcResName)
+                        val (destResId, destResType, destResName) = replace.entryToResource()
+                        val destResIdInt = symbols.getInt(destResType, destResName)
+                        logger.println(" * replace 0x${srcResIdInt.toString(16)}($dup) with 0x${destResIdInt.toString(16)}($replace)\t${size}bytes crc32/$crc32")
                     }
-                    val maxWidth = mapOfDuplicatesReplacements.map { it.key.length }.maxOrNull()?.plus(10) ?: 10
-                    logger.println("-".repeat(maxWidth))
-                    logger.println("Total: $total bytes, ap length: ${s0 - s1} bytes")
                 }
+                val s1 = ap_.length()
+                logger.println("-".repeat(maxWidth))
+                logger.println("Total: $total bytes, ap length: ${s0 - s1} bytes")
             }
         }
     }
@@ -125,44 +131,46 @@ fun File.removeDuplicatedFiles(
     val compressedEntry = HashSet<String>()
     ZipFile(this).use { zipInputFile ->
         zipInputFile.extractEntry(arscFile, ARSC_FILE_NAME)
-        val reader = ArscReader(arscFile.canonicalPath)
-        val resTable = reader.readResourceTable()
-//    logger_.warn("Delete files:")
-//    val maxWidth = mapOfDuplicatesReplacements.map { it.key.length }.maxOrNull()?.plus(10) ?: 10
-        val replaceIterator = mapOfDuplicatesReplacements.keys.iterator()
-        while (replaceIterator.hasNext()) {
-            val srcEntryName = replaceIterator.next()
-            val (srcResId, srcResType, srcResName) = srcEntryName.entryToResource()
-            val srcResIdInt = symbols.getInt(srcResType, srcResName)
-            val (crc32, size, destEntryName) = mapOfDuplicatesReplacements[srcEntryName] ?: continue
-            val (destResId, destResType, destResName) = destEntryName.entryToResource()
-            val destResIdInt = symbols.getInt(destResType, destResName)
-
-            val success = com.tencent.mm.arscutil.ArscUtil.replaceFileResource(
-                resTable, srcResIdInt, srcEntryName, destResIdInt, destEntryName
-            )
-            if (!success) {
+        val destArscFile = File(shrunkApFile, "shrinked_${ARSC_FILE_NAME}")
+        FileInputStream(arscFile).use { arscStream ->
+            val resourceFile = ResourceFile.fromInputStream(arscStream)
+            val replaceIterator = mapOfDuplicatesReplacements.keys.iterator()
+            while (replaceIterator.hasNext()) {
+                val srcEntryName = replaceIterator.next()
+                val (srcResId, srcResType, srcResName) = srcEntryName.entryToResource()
+                val srcResIdInt = symbols.getInt(srcResType, srcResName)
+                val (crc32, size, destEntryName) = mapOfDuplicatesReplacements[srcEntryName] ?: continue
+                val (destResId, destResType, destResName) = destEntryName.entryToResource()
+                val destResIdInt = symbols.getInt(destResType, destResName)
+                val sourcePkgId = srcResIdInt.getPackageId()
+                val targetPkgId = destResIdInt.getPackageId()
+                var success = false
+                success = if (sourcePkgId != targetPkgId) {
+                    System.out.printf("sourcePkgId %d != targetPkgId %d, quit replace!%n", sourcePkgId, targetPkgId)
+                    false
+                }else{
+                    resourceFile.replaceFileResource(srcEntryName, destEntryName)
+                }
+                if (!success) {
 //            logger.println("replace ${srcResId}($srcEntryName) with $destResId($destEntryName) failed!")
-                logger_.error("replace ${srcResId}($srcEntryName) with $destResId($destEntryName) failed!")
-                replaceIterator.remove()
-            } else {
+                    logger_.error("replace ${srcResId}($srcEntryName) with $destResId($destEntryName) failed!")
+                    replaceIterator.remove()
+                } else {
 //            logger_.warn(" - replace $srcEntryName with $destEntryName\t$size bytes $crc32")
-                total += size
+                    total += size
+                }
+            }
+            destArscFile.outputStream().use {
+                it.write(resourceFile.toByteArray())
+                it.flush()
             }
         }
-
-//    logger_.warn("-".repeat(maxWidth))
-//    logger_.warn("Total: $total bytes")
-
-        val destArscFile = File(shrunkApFile, "shrinked_${ARSC_FILE_NAME}")
-        val writer = ArscWriter(destArscFile.canonicalPath)
-        writer.writeResTable(resTable)
         if (arscFile.delete()) {
             if (!destArscFile.renameTo(arscFile)) {
                 destArscFile.copyTo(arscFile, overwrite = true)
+                destArscFile.delete()
             }
         }
-
         zipInputFile.extractEntries {
             destDir = shrunkApFile
             filter = { zipEntry ->

@@ -20,12 +20,16 @@ class ApFileTest {
             .map(Wildcard.Companion::valueOf).toSet()
         assertFalse { symbols.isEmpty() }
         val ap_ = PWD.file("src", "test", "resources", "resources-debug.ap_")
+        //1.find duplicated files from ap file
         val mapOfDuplicatesReplacements = mutableMapOf<String, Triple<Long, Long, String>>()
         ZipFile(ap_).use {
             it.findDuplicatedFiles {
                 filter = { entry ->
-                    val entryName = entry.name
-                    entryName.startsWith("res/") && !ignores.any { it.matches(entryName) }
+                    val ign = ignores.any { it.matches(entry.name) }
+                    if (ign) {
+                        println("Ignore `${entry.name}`")
+                    }
+                    entry.name.startsWith("res/") && !ign
                 }
                 foreach = { dup, replace ->
                     mapOfDuplicatesReplacements[dup.name] =
@@ -33,20 +37,20 @@ class ApFileTest {
                 }
             }
         }
+        val maxWidth = mapOfDuplicatesReplacements.map { it.key.length }.maxOrNull()?.plus(10) ?: 10
+        var total = 0L
+        val s0 = ap_.length()
+        println("Delete files:")
         if (mapOfDuplicatesReplacements.isNotEmpty()) {
             //2.remove duplicated files  and repack ap file
-            val s0 = ap_.length()
-            val total = ap_.removeDuplicatedFiles(symbols, mapOfDuplicatesReplacements)
-            val s1 = ap_.length()
-//                results.add(CompressionResult(ap_, s0, s1, ap_))
-            println("Delete files:")
+            total = ap_.removeDuplicatedFiles(symbols, mapOfDuplicatesReplacements)
             mapOfDuplicatesReplacements.forEach { dup, (crc32, size, replace) ->
-                println(" * replace $dup with $replace\t$size $crc32")
+                println(" * replace $dup with $replace\t$size bytes $crc32")
             }
-            val maxWidth = mapOfDuplicatesReplacements.map { it.key.length }.maxOrNull()?.plus(10) ?: 10
-            println("-".repeat(maxWidth))
-            println("Total: $total bytes, ap length: ${s0-s1} bytes")
         }
+        val s1 = ap_.length()
+        println("-".repeat(maxWidth))
+        println("Total: $total bytes, ap length: ${s0 - s1} bytes")
     }
 
 }
