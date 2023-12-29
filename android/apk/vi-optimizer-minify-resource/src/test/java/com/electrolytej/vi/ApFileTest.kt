@@ -1,6 +1,5 @@
 package com.electrolytej.vi
 
-import com.didiglobal.booster.gradle.getProperty
 import com.didiglobal.booster.kotlinx.Wildcard
 import com.didiglobal.booster.kotlinx.file
 import java.io.File
@@ -43,7 +42,7 @@ class ApFileTest {
         println("Delete files:")
         if (mapOfDuplicatesReplacements.isNotEmpty()) {
             //2.remove duplicated files  and repack ap file
-            total = ap_.removeDuplicatedFiles(symbols, mapOfDuplicatesReplacements)
+            total = ap_.minify(symbols, mapOfDuplicatesReplacements)
             mapOfDuplicatesReplacements.forEach { dup, (crc32, size, replace) ->
                 println(" * replace $dup with $replace\t$size bytes $crc32")
             }

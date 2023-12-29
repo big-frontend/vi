@@ -1,4 +1,4 @@
-package com.jamesfchen.vi.apk.minify;
+package com.electrolytej.vi;
 
 import java.util.Arrays;
 import java.util.List;

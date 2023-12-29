@@ -12,14 +12,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
 
-class A {
-    var filter: ((ZipEntry) -> Boolean)? = null
-    var foreach: ((ZipEntry, ZipEntry) -> Unit)? = null
-}
-
-fun ZipFile.findDuplicatedFiles(block: A.() -> Unit) {
-    val a = A()
-    block(a)
+fun ZipFile.findDuplicatedFiles(filter: ((ZipEntry) -> Boolean)? = null,each: ((ZipEntry, ZipEntry) -> Unit)? = null) {
     val duplicated = mutableMapOf<Long, MutableList<ZipEntry>>()
     val entries = entries()
     while (entries.hasMoreElements()) {
@@ -43,7 +36,7 @@ fun ZipFile.findDuplicatedFiles(block: A.() -> Unit) {
         var it = duplicatedEntries.iterator()
         while (it.hasNext()) {
             val entry = it.next()
-            if (a.filter?.invoke(entry) == false) {
+            if (filter?.invoke(entry) == false) {
                 it.remove()
             }
         }
@@ -52,7 +45,7 @@ fun ZipFile.findDuplicatedFiles(block: A.() -> Unit) {
         val replaceEntry = it.next()
         while (it.hasNext()) {
             val dupEntry = it.next()
-            a.foreach?.invoke(dupEntry, replaceEntry)
+            each?.invoke(dupEntry, replaceEntry)
         }
     }
 }
@@ -85,24 +78,19 @@ private fun zipFile(
     }
 }
 
-class B {
-    lateinit var destDir: File
-    var filter: ((ZipEntry) -> Boolean)? = null
-    var foreach: ((ZipEntry, File) -> Unit)? = null
-}
-
-fun ZipFile.extractEntries(block: B.() -> Unit) {
-    val b = B()
-    block(b)
+fun ZipFile.extractEntries(destDir: File,
+                           filter: ((ZipEntry) -> Boolean)? = null,
+                           each: ((ZipEntry, File) -> Unit)? = null
+) {
     for (zipEntry in entries()) {
-        if (b.filter?.let { it(zipEntry) } == true) {
-            val destFile = File(b.destDir, zipEntry.name.replace('/', File.separatorChar))
+        if (filter?.let { it(zipEntry) } == true) {
+            val destFile = File(destDir, zipEntry.name.replace('/', File.separatorChar))
             if (zipEntry.isDirectory) {
                 destFile.createOrExistsDir()
             } else {
                 destFile.createOrExistsFile()
             }
-            b.foreach?.let { it(zipEntry, destFile) }
+            each?.let { it(zipEntry, destFile) }
             extractEntry(destFile, zipEntry)
         }
     }

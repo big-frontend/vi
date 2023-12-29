@@ -36,7 +36,7 @@ include(
     ":apk:matrix-arscutil",
     ":apk:matrix-commons",
     ":apk:vi-monitor-matrix-apkchecker",
-    ":apk:vi-optimizer-duplicated-files",
+    ":apk:vi-optimizer-minify-resource",
     ":apk:vi-linter-apksize",
     ":apk:vi-lint-rules",
 )

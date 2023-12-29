@@ -89,10 +89,10 @@ fun File.minify(
                 while (replaceIterator.hasNext()) {
                     val sourceFile = replaceIterator.next()
                     val sourceRes = ApkUtil.entryToResourceName(sourceFile)
-                    val sourceId = mapOfResources[sourceRes]!!
+                    val sourceIdInt = mapOfResources[sourceRes]!!
                     val targetFile = mapOfDuplicatesReplacements[sourceFile]
                     val targetRes = ApkUtil.entryToResourceName(targetFile)
-                    val targetId = mapOfResources[targetRes]!!
+                    val targetIdInt = mapOfResources[targetRes]!!
                     val success = ArscUtil.replaceFileResource(resTable, sourceId, sourceFile, targetId, targetFile)
                     if (!success) {
                         Log.w(MinifyTask.TAG, "replace %s(%s) with %s(%s) failed!", sourceRes, sourceFile, targetRes, targetFile)
