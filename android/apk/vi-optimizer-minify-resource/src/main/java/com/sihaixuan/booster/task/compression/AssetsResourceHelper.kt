@@ -3,7 +3,7 @@ package com.sihaixuan.booster.task.compression
 import com.android.SdkConstants
 import com.android.build.gradle.api.BaseVariant
 import com.didiglobal.booster.gradle.project
-import com.didiglobal.booster.util.search
+import com.didiglobal.booster.kotlinx.search
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import org.jf.baksmali.BaksmaliOptions

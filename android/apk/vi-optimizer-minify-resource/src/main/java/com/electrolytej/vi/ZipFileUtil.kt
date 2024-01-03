@@ -78,24 +78,6 @@ private fun zipFile(
     }
 }
 
-fun ZipFile.extractEntries(destDir: File,
-                           filter: ((ZipEntry) -> Boolean)? = null,
-                           each: ((ZipEntry, File) -> Unit)? = null
-) {
-    for (zipEntry in entries()) {
-        if (filter?.let { it(zipEntry) } == true) {
-            val destFile = File(destDir, zipEntry.name.replace('/', File.separatorChar))
-            if (zipEntry.isDirectory) {
-                destFile.createOrExistsDir()
-            } else {
-                destFile.createOrExistsFile()
-            }
-            each?.let { it(zipEntry, destFile) }
-            extractEntry(destFile, zipEntry)
-        }
-    }
-}
-
 fun File?.createOrExistsFile(): Boolean {
     if (this == null) return false
     if (this.exists()) return this.isFile()

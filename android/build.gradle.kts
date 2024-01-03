@@ -24,7 +24,7 @@ buildscript {
 //        classpath("io.github.electrolytej:vi-task-matrix-apkchecker:1.0.0-SNAPSHOT")
 //        classpath("io.github.electrolytej:vi-transform-startup:1.0.0-SNAPSHOT")
 //        classpath("com.didiglobal.booster:booster-transform-r-inline:$booster_version")
-//        classpath("io.github.electrolytej:vi-optimizer-minify-resource:1.0.0-SNAPSHOT")
+        classpath("io.github.electrolytej:vi-optimizer-minify-resource:1.0.0-SNAPSHOT")
     }
 }
 plugins {

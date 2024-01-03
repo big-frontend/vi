@@ -2,17 +2,18 @@ package com.sihaixuan.booster.task.compression
 
 import com.android.SdkConstants
 import com.android.build.gradle.api.BaseVariant
+import com.android.build.gradle.internal.res.shrinker.DummyContent
 import com.android.build.gradle.tasks.ResourceUsageAnalyzer
 import com.didiglobal.booster.gradle.*
 import com.didiglobal.booster.kotlinx.file
+import com.didiglobal.booster.kotlinx.search
 import com.didiglobal.booster.kotlinx.touch
 
 
 import com.didiglobal.booster.task.spi.VariantProcessor
-import com.didiglobal.booster.util.search
+import com.electrolytej.vi.removeString
+import com.electrolytej.vi.setString
 import com.google.auto.service.AutoService
-import com.sihaixuan.extractzip.util.removeString
-import com.sihaixuan.extractzip.util.setString
 import pink.madis.apk.arsc.ResourceFile
 import pink.madis.apk.arsc.ResourceTableChunk
 import java.io.*
@@ -59,7 +60,7 @@ import java.util.concurrent.CopyOnWriteArrayList
  *
  *
  */
-@AutoService(VariantProcessor::class)
+//@AutoService(VariantProcessor::class)
 class RemoveRepeatResourceVariantProcessor: VariantProcessor  {
     
 
@@ -70,7 +71,7 @@ class RemoveRepeatResourceVariantProcessor: VariantProcessor  {
 
         //重复资源的筛选条件为 资源的zipEntry.crc相等，最先出现的资源压缩包产物是在processResTask，
         // 尽可能早的删除重复资源，可以减少后续task的执行时间
-        variant.processResTask.doLast{
+        variant.processResTask?.doLast{
             variant.removeRepeatResources(it.logger,results)
         }
 
@@ -190,10 +191,10 @@ private fun containsUnusedAssertsRes(file:File, unusedAssertsRes :List<String>):
  */
 
 val unusedResourceCrcs  = longArrayOf(
-    ResourceUsageAnalyzer.TINY_PNG_CRC,
-    ResourceUsageAnalyzer.TINY_9PNG_CRC,
-    ResourceUsageAnalyzer.TINY_BINARY_XML_CRC,
-    ResourceUsageAnalyzer.TINY_PROTO_XML_CRC,
+    DummyContent.TINY_PNG_CRC,
+    DummyContent.TINY_9PNG_CRC,
+    DummyContent.TINY_BINARY_XML_CRC,
+    DummyContent.TINY_PROTO_XML_CRC,
     0 //jpg、jpeg、webp等
 )
 
@@ -212,10 +213,10 @@ private fun BaseVariant.generateReport(results: RemoveRepeatResourceResults) {
     var unusedAssetsSize : Long = 0
     var arscSize : Long = 0
 
-    val maxWidth0 = results.map { it.name.length }.max() ?: 0
-    val maxWidth1 = (results.map { it.size.toString().length }.max() ?: 0) + 6
-    val maxWidth2 = (results.map { it.compressionSize.toString().length }.max() ?: 0) + 6
-    val maxWidth3 = (results.map { it.entryType.length}.max() ?: 0) + 6
+    val maxWidth0 = results.map { it.name.length }.maxOrNull() ?: 0
+    val maxWidth1 = (results.map { it.size.toString().length }.maxOrNull() ?: 0) + 6
+    val maxWidth2 = (results.map { it.compressionSize.toString().length }.maxOrNull() ?: 0) + 6
+    val maxWidth3 = (results.map { it.entryType.length}.maxOrNull() ?: 0) + 6
 
     var fullWidth = 0
 
@@ -501,12 +502,12 @@ private fun doRemoveUnusedResources(apFile:File,logger:Logger,results:RemoveRepe
 
 private fun BaseVariant.removeRepeatResources(logger:Logger,results:RemoveRepeatResourceResults){
 
-    val files = scope.processedRes.search {
-        it.name.startsWith(SdkConstants.FN_RES_BASE) && it.extension == SdkConstants.EXT_RES
-    }
-    files.parallelStream().forEach { ap_ ->
-        doRemoveRepeatResources(ap_,logger,results)
-    }
+//    val files = scope.processedRes.search {
+//        it.name.startsWith(SdkConstants.FN_RES_BASE) && it.extension == SdkConstants.EXT_RES
+//    }
+//    files.parallelStream().forEach { ap_ ->
+//        doRemoveRepeatResources(ap_,logger,results)
+//    }
 
 
 }

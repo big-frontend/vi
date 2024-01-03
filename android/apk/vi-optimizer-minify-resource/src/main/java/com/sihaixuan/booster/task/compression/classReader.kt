@@ -1,6 +1,6 @@
 package com.sihaixuan.booster.task.compression
 
-import com.didiglobal.booster.kotlinx.redirect
+import com.didiglobal.booster.kotlinx.search
 
 /**
  *
@@ -14,7 +14,6 @@ import com.didiglobal.booster.kotlinx.redirect
  *
  */
 
-import com.didiglobal.booster.util.search
 import org.gradle.api.logging.Logging
 import org.objectweb.asm.ClassReader
 import org.objectweb.asm.tree.ClassNode
