@@ -9,27 +9,34 @@ import org.gradle.api.file.ConfigurableFileCollection
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
+
 fun BaseVariant.findMappingTxtFile(): File? {
     return mappingFileProvider.get().singleFile
 }
+
 fun BaseVariant.findRTxtFile(): File {
     return symbolList.singleFile
 }
-fun Project.findToolnm(): File {
+
+fun Project.findToolnm(): File? {
     val extension = (extensions.findByType(BaseExtension::class.java) as BaseExtension)
     val adb = extension.adbExecutable
+    val ndkVersion = extension.ndkVersion
+    if (ndkVersion.isNullOrEmpty()){
+
+        return null
+    }
 //    val SO_ARCH = 'arm-linux-androideabi'
     val SO_ARCH = "aarch64-linux-android"
     val isWindows = Os.isFamily(Os.FAMILY_WINDOWS)
-    val prebuiltPath = "${adb.parentFile.parentFile}${File.separator}ndk${File.separator}${extension.ndkVersion}${File.separator}toolchains${File.separator}${SO_ARCH}-4.9${File.separator}prebuilt"
-    val platform = if(isWindows) "windows-x86_64" else "linux-x86_64" //darwin-x86_64
-    val nm = if(isWindows)  "${SO_ARCH}-nm.exe" else "${SO_ARCH}-nm"
-    return File("${prebuiltPath}${File.separator}${platform}${File.separator}bin${File.separator}${nm}")
+    val platform = if (isWindows) "windows-x86_64" else "linux-x86_64" //darwin-x86_64
+    val nm = if (isWindows) "${SO_ARCH}-nm.exe" else "${SO_ARCH}-nm"
+    return project.file(adb.parentFile).resolve("ndk").resolve(ndkVersion).resolve("toolchains")
+        .resolve("${SO_ARCH}-4.9").resolve("prebuilt").resolve(platform).resolve("bin").resolve(nm)
 }
 
 fun Project.findApkAnalyzer() =
     Jar.getResourceAsFile("/matrix-apk-canary-2.0.8.jar", ApkAnalysisVariantProcessor::class.java)
-
 
 
 fun Project.findBuildTools(): File {
