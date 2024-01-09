@@ -22,7 +22,8 @@ android {
     namespace = "com.electrolytej.vi"
     compileSdk = 34
     buildToolsVersion ="30.0.2"
-
+    val NDK_VERSION:String by project
+    ndkVersion = NDK_VERSION
     defaultConfig {
         applicationId = "com.electrolytej.vi"
         minSdk = 21

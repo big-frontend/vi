@@ -3,6 +3,7 @@ package com.electrolytej.vi
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.api.BaseVariant
 import com.didiglobal.booster.gradle.symbolList
+import com.didiglobal.booster.kotlinx.OS
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.Project
 import org.gradle.api.file.ConfigurableFileCollection
@@ -23,14 +24,24 @@ fun Project.findToolnm(): File? {
     val adb = extension.adbExecutable
     val ndkVersion = extension.ndkVersion
     if (ndkVersion.isNullOrEmpty()){
-
         return null
     }
 //    val SO_ARCH = 'arm-linux-androideabi'
     val SO_ARCH = "aarch64-linux-android"
-    val isWindows = Os.isFamily(Os.FAMILY_WINDOWS)
-    val platform = if (isWindows) "windows-x86_64" else "linux-x86_64" //darwin-x86_64
-    val nm = if (isWindows) "${SO_ARCH}-nm.exe" else "${SO_ARCH}-nm"
+    val platform = if (Os.isFamily(Os.FAMILY_WINDOWS)){
+        "windows-x86_64"
+    }else if (Os.isFamily(Os.FAMILY_MAC) || OS.isMac()){
+        "darwin-x86_64"
+    }else{
+        "linux-x86_64"
+    }
+    val nm = if (Os.isFamily(Os.FAMILY_WINDOWS)){
+        "${SO_ARCH}-nm.exe"
+    }else if (Os.isFamily(Os.FAMILY_MAC) || OS.isMac()){
+        "${SO_ARCH}-nm"
+    }else{
+        "${SO_ARCH}-nm"
+    }
     return project.file(adb.parentFile).resolve("ndk").resolve(ndkVersion).resolve("toolchains")
         .resolve("${SO_ARCH}-4.9").resolve("prebuilt").resolve(platform).resolve("bin").resolve(nm)
 }

@@ -24,7 +24,7 @@
         {"name": "-countR"},
         {"name": "-duplicatedFile"},
         {
-            "--rTxt": "E:\\CrossPlatformProject\\vi\\android\\app\\build\\intermediates\\runtime_symbol_list\\debug\\R.txt",
+            "--rTxt": "/Users/hawks.jamesf/tech/BfeProjects/vi/android/app/build/intermediates/runtime_symbol_list/release/R.txt",
             "name": "-unusedResources",
             "--ignoreResources": [
                 "R.raw.*",
@@ -75,17 +75,17 @@
         {"name": "-checkMultiLibrary"},
         {
             "name": "-checkMultiSTL",
-            "--toolnm": "E:\\Sdk\\ndk\\22.0.7026061\\toolchains\\aarch64-linux-android-4.9\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android-nm.exe"
+            "--toolnm": "/Users/hawks.jamesf/Library/Android/sdk/platform-tools/ndk/22.0.7026061/toolchains/aarch64-linux-android-4.9/prebuilt/darwin-x86_64/bin/aarch64-linux-android-nm"
         },
         {
             "name": "-unstrippedSo",
-            "--toolnm": "E:\\Sdk\\ndk\\22.0.7026061\\toolchains\\aarch64-linux-android-4.9\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android-nm.exe"
+            "--toolnm": "/Users/hawks.jamesf/Library/Android/sdk/platform-tools/ndk/22.0.7026061/toolchains/aarch64-linux-android-4.9/prebuilt/darwin-x86_64/bin/aarch64-linux-android-nm"
         }
     ],
     "--format": "mm.html,mm.json",
-    "--mappingTxt": "E:\\CrossPlatformProject\\vi\\android\\app\\build\\outputs\\mapping\\release\\mapping.txt",
-    "--apk": "E:\\CrossPlatformProject\\vi\\android\\app\\build\\outputs\\apk\\debug\\app-debug.apk",
-    "--output": "E:\\CrossPlatformProject\\vi\\android\\app\\build/outputs/apk-checker-result",
+    "--mappingTxt": "/Users/hawks.jamesf/tech/BfeProjects/vi/android/app/build/outputs/mapping/release/mapping.txt",
+    "--apk": "/Users/hawks.jamesf/tech/BfeProjects/vi/android/app/build/outputs/apk/release/app-release.apk",
+    "--output": "/Users/hawks.jamesf/tech/BfeProjects/vi/android/app/build/outputs/apk-checker-result",
     "--formatConfig": [{
         "name": "-countMethod",
         "group": [

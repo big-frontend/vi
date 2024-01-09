@@ -21,10 +21,10 @@ buildscript {
         val booster_version = "4.16.3"
         classpath("com.didiglobal.booster:booster-gradle-plugin:$booster_version")
 //        classpath("com.didiglobal.booster:booster-transform-usage:$booster_version")
-//        classpath("io.github.electrolytej:vi-task-matrix-apkchecker:1.0.0-SNAPSHOT")
+        classpath("io.github.electrolytej:vi-monitor-matrix-apkchecker:1.0.0-SNAPSHOT")
 //        classpath("io.github.electrolytej:vi-transform-startup:1.0.0-SNAPSHOT")
 //        classpath("com.didiglobal.booster:booster-transform-r-inline:$booster_version")
-        classpath("io.github.electrolytej:vi-optimizer-minify-resource:1.0.0-SNAPSHOT")
+//        classpath("io.github.electrolytej:vi-optimizer-minify-resource:1.0.0-SNAPSHOT")
     }
 }
 plugins {
