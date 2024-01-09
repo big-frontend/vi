@@ -1,0 +1,10 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+$dokka.location:com.electrolytej.vi////PointingToDeclaration/vi-optimizer-duplicated-files/com.electrolytej.vi/index.html
+$dokka.location:com.electrolytej.vi/UnusedResourceOptimizer.Companion///PointingToDeclaration/vi-optimizer-duplicated-files/com.electrolytej.vi/-unused-resource-optimizer/-companion/index.html
+$dokka.location:com.electrolytej.vi/UnusedResourceOptimizer///PointingToDeclaration/vi-optimizer-duplicated-files/com.electrolytej.vi/-unused-resource-optimizer/index.html
+$dokka.location:com.electrolytej.vi/UnusedResourceOptimizer/UnusedResourceOptimizer/#/PointingToDeclaration/vi-optimizer-duplicated-files/com.electrolytej.vi/-unused-resource-optimizer/-unused-resource-optimizer.html
+$dokka.location:com.electrolytej.vi/UnusedResourceOptimizer/processArsc/#pink.madis.apk.arsc.ResourceFile/PointingToDeclaration/vi-optimizer-duplicated-files/com.electrolytej.vi/-unused-resource-optimizer/process-arsc.html
+$dokka.location:com.electrolytej.vi/UnusedResourceOptimizer/processRes/#java.util.zip.ZipFile#java.io.File#java.util.zip.ZipEntry/PointingToDeclaration/vi-optimizer-duplicated-files/com.electrolytej.vi/-unused-resource-optimizer/process-res.html
+com.electrolytej.vi
+

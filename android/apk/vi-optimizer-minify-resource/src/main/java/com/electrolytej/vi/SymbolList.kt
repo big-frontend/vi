@@ -9,8 +9,8 @@ class SymbolList private constructor(builder: Builder) : Iterable<SymbolList.Sym
 
     override fun iterator(): Iterator<Symbol<*>> = this.symbols.iterator()
 
-    fun getInt(type: String, name: String): Int {
-        return (this.symbols.find { it.type == type && it.name == name }?.value as? Int)!!
+    fun getInt(type: String, name: String): Int? {
+        return (this.symbols.find { it.type == type && it.name == name }?.value as? Int)
     }
 
     fun getIntArray(type: String = "styleable", name: String): IntArray {

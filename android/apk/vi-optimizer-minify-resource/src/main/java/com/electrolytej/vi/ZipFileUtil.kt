@@ -12,44 +12,6 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 import java.util.zip.ZipOutputStream
 
-fun ZipFile.findDuplicatedFiles(filter: ((ZipEntry) -> Boolean)? = null,each: ((ZipEntry, ZipEntry) -> Unit)? = null) {
-    val duplicated = mutableMapOf<Long, MutableList<ZipEntry>>()
-    val entries = entries()
-    while (entries.hasMoreElements()) {
-        val entry = entries.nextElement()
-        if (entry.isDirectory) continue
-        if (entry.size <= 0) continue
-        //duplicatedFiles:map crc32 to entry
-        if (!duplicated.containsKey(entry.crc)) {
-            duplicated[entry.crc] = mutableListOf()
-        }
-        duplicated[entry.crc]?.add(entry)
-    }
-    val iterator = duplicated.values.iterator()
-    while (iterator.hasNext()) {
-        val duplicatedEntries = iterator.next()
-        if (duplicatedEntries.size <= 1) continue
-        if (!duplicatedEntries.isSameResourceType()) {
-//            logger_.error("the type of duplicated resources $duplicatedEntries are not same!")
-            continue
-        }
-        var it = duplicatedEntries.iterator()
-        while (it.hasNext()) {
-            val entry = it.next()
-            if (filter?.invoke(entry) == false) {
-                it.remove()
-            }
-        }
-        if (duplicatedEntries.size <= 1) continue
-        it = duplicatedEntries.iterator()
-        val replaceEntry = it.next()
-        while (it.hasNext()) {
-            val dupEntry = it.next()
-            each?.invoke(dupEntry, replaceEntry)
-        }
-    }
-}
-
 fun File.zipFile(destFile: File, shouldCompress: (ZipEntry) -> Boolean) {
     ZipOutputStream(FileOutputStream(destFile)).use { zipOutputStream ->
         zipFile(zipOutputStream, this, canonicalPath, shouldCompress)

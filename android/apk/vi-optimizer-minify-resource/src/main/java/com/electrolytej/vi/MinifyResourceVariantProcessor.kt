@@ -3,7 +3,7 @@ package com.electrolytej.vi
 import com.android.SdkConstants
 import com.android.build.gradle.api.BaseVariant
 import com.android.build.gradle.internal.tasks.factory.dependsOn
-import com.didiglobal.booster.gradle.packageTaskProvider
+import com.didiglobal.booster.annotations.Priority
 import com.didiglobal.booster.gradle.processResTaskProvider
 import com.didiglobal.booster.gradle.processedRes
 import com.didiglobal.booster.gradle.project
@@ -18,6 +18,7 @@ import pink.madis.apk.arsc.ResourceFile
 import java.io.File
 import java.io.FileInputStream
 import java.text.DecimalFormat
+import java.util.ServiceLoader
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 
@@ -25,8 +26,9 @@ import java.util.zip.ZipFile
 @AutoService(VariantProcessor::class)
 class MinifyResourceVariantProcessor : VariantProcessor {
     override fun process(variant: BaseVariant) {
+
         val minifyApFile = variant.project.tasks.register(
-            "minify${variant.name.capitalize()}ApFile", RemoveDuplicatedFiles::class.java
+            "minify${variant.name.capitalize()}ApFile", MinifyApFiles::class.java
         ) {
             it.group = "booster"
             it.description = "minify ap file for ${variant.name}"
@@ -38,61 +40,49 @@ class MinifyResourceVariantProcessor : VariantProcessor {
                 it.finalizedBy(minifyApFile)
             }
         }
-        val removeUnusedFiles = variant.project.tasks.register(
-            "remove${variant.name.capitalize()}UnusedFiles", RemoveUnusedFiles::class.java
-        ) {
-            it.group = "booster"
-            it.description = "remove unused files for ${variant.name}"
-            it.variant = variant
-        }
-        variant.packageTaskProvider?.let { packageApk ->
-            packageApk.configure {
-                it.doFirst {
-                }
-            }
-        }
+//        val removeUnusedFiles = variant.project.tasks.register(
+//            "remove${variant.name.capitalize()}UnusedFiles", RemoveUnusedFiles::class.java
+//        ) {
+//            it.group = "booster"
+//            it.description = "remove unused files for ${variant.name}"
+//            it.variant = variant
+//        }
+//        variant.packageTaskProvider?.let { packageApk ->
+//            packageApk.configure {
+//                it.doFirst {
+//                }
+//            }
+//        }
     }
 }
 
-internal abstract class RemoveUnusedFiles : DefaultTask() {
+//internal abstract class RemoveUnusedFiles : DefaultTask() {
+//    @get:Internal
+//    lateinit var variant: BaseVariant
+//
+//}
+
+open class MinifyApFiles : DefaultTask() {
+
     @get:Internal
     lateinit var variant: BaseVariant
-
-}
-
-internal abstract class RemoveDuplicatedFiles : DefaultTask() {
-
-    @get:Internal
-    lateinit var variant: BaseVariant
-    private lateinit var symbols: SymbolList
-    private lateinit var logger: L
-
-    private lateinit var optimizers: List<BaseOptimizer>
-
     @TaskAction
-    fun remove() {
-        this.symbols = SymbolList.from(variant.symbolList.single())
-
-        this.logger = L.create(variant)
-        logger.use {
-            optimizers = listOf(
-                DuplicatedFilesOptimizer(variant, symbols, logger),
-                ObfuscatedResourceOptimizer(variant, symbols, logger),
-                UnusedResourceOptimizer(variant, symbols, logger),
-            )
-            val files = variant.processedRes.search {
-                it.name.startsWith(SdkConstants.FN_RES_BASE) && it.extension == SdkConstants.EXT_RES
-            }
-            files.parallelStream().forEach { ap_ ->
-                //    val dest = File.createTempFile(SdkConstants.FN_RES_BASE + SdkConstants.RES_QUALIFIER_SEP, SdkConstants.DOT_RES)
-                optimizers.forEach { it.start(ap_) }
-                ap_.minify(optimizers)
-                optimizers.forEach { it.end(ap_) }
-            }
+    fun minify() {
+        val symbols = SymbolList.from(variant.symbolList.single())
+        val optimizers = ServiceLoader.load(BaseOptimizer::class.java, Thread.currentThread().contextClassLoader)
+                .sortedBy {
+                    it.javaClass.getAnnotation(Priority::class.java)?.value ?: 0
+                }
+        val files = variant.processedRes.search {
+            it.name.startsWith(SdkConstants.FN_RES_BASE) && it.extension == SdkConstants.EXT_RES
+        }
+        files.parallelStream().forEach { ap_ ->
+            //    val dest = File.createTempFile(SdkConstants.FN_RES_BASE + SdkConstants.RES_QUALIFIER_SEP, SdkConstants.DOT_RES)
+            optimizers.forEach { it.start(variant, symbols, ap_) }
+            ap_.minify(optimizers)
+            optimizers.forEach { it.end(ap_) }
         }
     }
-
-
 }
 
 const val ARSC_FILE_NAME = "resources.arsc"

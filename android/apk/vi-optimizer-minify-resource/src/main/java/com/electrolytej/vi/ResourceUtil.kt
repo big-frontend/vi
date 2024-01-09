@@ -1,10 +1,5 @@
 package com.electrolytej.vi
 
-import pink.madis.apk.arsc.PackageChunk
-import pink.madis.apk.arsc.ResourceFile
-import pink.madis.apk.arsc.ResourceTableChunk
-import pink.madis.apk.arsc.StringPoolChunk
-import java.io.FileInputStream
 import java.util.zip.ZipEntry
 
 fun Int.getResourceTypeId(): Int {
@@ -73,25 +68,4 @@ fun String.entryToResType(): String {
         }
     }
     return ""
-}
-fun SymbolList.obfuscatedResId(
-    filter: (SymbolList.IntSymbol) -> Boolean,
-    each: (SymbolList.IntSymbol, String) -> Unit
-) {
-    // Prepare proguard resource name
-    val mapOfResTypeName = HashMap<String, HashSet<SymbolList.IntSymbol>>()
-    filterIsInstance<SymbolList.IntSymbol>().forEach {
-        if (!mapOfResTypeName.containsKey(it.type)) {
-            mapOfResTypeName[it.type] = HashSet()
-        }
-        mapOfResTypeName[it.type]?.add(it)
-    }
-    for (resType in mapOfResTypeName.keys) {
-        val resTypeBuilder = ProguardStringBuilder()
-        mapOfResTypeName[resType]?.forEach { sym ->
-            if (filter(sym)) {
-                each(sym, resTypeBuilder.generateNextProguard())
-            }
-        }
-    }
 }

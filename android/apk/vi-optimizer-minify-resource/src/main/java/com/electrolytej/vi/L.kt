@@ -21,10 +21,10 @@ class L : AutoCloseable {
 
 
     companion object {
-        fun create(variant: BaseVariant): L {
-            val log = variant.getReport("vi-optimizer-minify-resource", "report.txt").touch()
-                .printWriter()
-            return L(log)
+        fun create(variant: BaseVariant?, reportDir: String): L {
+            val log = variant?.getReport(reportDir, "report.txt")?.touch()
+                ?.printWriter()
+            return if (log != null) L(log) else create()
         }
 
         fun create(): L {

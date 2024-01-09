@@ -37,6 +37,8 @@ include(
     ":apk:matrix-commons",
     ":apk:vi-monitor-matrix-apkchecker",
     ":apk:vi-optimizer-minify-resource",
+    ":apk:vi-optimizer-duplicated-files",
+    ":apk:vi-optimizer-obfuscated-resource",
     ":apk:vi-linter-apksize",
     ":apk:vi-lint-rules",
 )

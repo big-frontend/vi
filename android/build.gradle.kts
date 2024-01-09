@@ -20,11 +20,22 @@ buildscript {
         classpath("io.github.jamesfchen:module-publisher-plugin:1.4.3")
         val booster_version = "4.16.3"
         classpath("com.didiglobal.booster:booster-gradle-plugin:$booster_version")
+        classpath("com.didiglobal.booster:booster-task-compression-cwebp:$booster_version")
+        classpath("com.didiglobal.booster:booster-task-compression-processed-res:$booster_version")
+        classpath("com.didiglobal.booster:booster-transform-r-inline:$booster_version")
+        classpath("com.didiglobal.booster:booster-transform-br-inline:$booster_version")
+//        classpath("com.didiglobal.booster:booster-task-resource-deredundancy:$booster_version")
+
+        classpath("com.didiglobal.booster:booster-task-analyser:$booster_version")
+//            classpath("com.didiglobal.booster:booster-transform-usage:$booster_version")
+        classpath("com.didiglobal.booster:booster-task-list-shared-library:$booster_version")
+        classpath("com.didiglobal.booster:booster-task-list-artifact:$booster_version")
+        classpath("com.didiglobal.booster:booster-task-check-snapshot:$booster_version")
 //        classpath("com.didiglobal.booster:booster-transform-usage:$booster_version")
         classpath("io.github.electrolytej:vi-monitor-matrix-apkchecker:1.0.0-SNAPSHOT")
 //        classpath("io.github.electrolytej:vi-transform-startup:1.0.0-SNAPSHOT")
-//        classpath("com.didiglobal.booster:booster-transform-r-inline:$booster_version")
-//        classpath("io.github.electrolytej:vi-optimizer-minify-resource:1.0.0-SNAPSHOT")
+        classpath("io.github.electrolytej:vi-optimizer-minify-resource:1.0.0-SNAPSHOT")
+        classpath("io.github.electrolytej:vi-optimizer-duplicated-files:1.0.0-SNAPSHOT")
     }
 }
 plugins {
