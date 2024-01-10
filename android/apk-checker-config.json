@@ -12,7 +12,6 @@
             "name": "-countMethod",
             "--group": "package"
         },
-        {"name": "-checkResProguard"},
         {
             "--min": "10",
             "name": "-findNonAlphaPng"
@@ -24,7 +23,7 @@
         {"name": "-countR"},
         {"name": "-duplicatedFile"},
         {
-            "--rTxt": "/Users/hawks.jamesf/tech/BfeProjects/vi/android/app/build/intermediates/runtime_symbol_list/release/R.txt",
+            "--rTxt": "E:\\BfeProject\\perf\\vi\\android\\app\\build\\intermediates\\runtime_symbol_list\\release\\R.txt",
             "name": "-unusedResources",
             "--ignoreResources": [
                 "R.raw.*",
@@ -75,17 +74,17 @@
         {"name": "-checkMultiLibrary"},
         {
             "name": "-checkMultiSTL",
-            "--toolnm": "/Users/hawks.jamesf/Library/Android/sdk/platform-tools/ndk/22.0.7026061/toolchains/aarch64-linux-android-4.9/prebuilt/darwin-x86_64/bin/aarch64-linux-android-nm"
+            "--toolnm": "E:\\Sdk\\ndk\\22.0.7026061\\toolchains\\aarch64-linux-android-4.9\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android-nm.exe"
         },
         {
             "name": "-unstrippedSo",
-            "--toolnm": "/Users/hawks.jamesf/Library/Android/sdk/platform-tools/ndk/22.0.7026061/toolchains/aarch64-linux-android-4.9/prebuilt/darwin-x86_64/bin/aarch64-linux-android-nm"
+            "--toolnm": "E:\\Sdk\\ndk\\22.0.7026061\\toolchains\\aarch64-linux-android-4.9\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android-nm.exe"
         }
     ],
     "--format": "mm.html,mm.json",
-    "--mappingTxt": "/Users/hawks.jamesf/tech/BfeProjects/vi/android/app/build/outputs/mapping/release/mapping.txt",
-    "--apk": "/Users/hawks.jamesf/tech/BfeProjects/vi/android/app/build/outputs/apk/release/app-release.apk",
-    "--output": "/Users/hawks.jamesf/tech/BfeProjects/vi/android/app/build/outputs/apk-checker-result",
+    "--mappingTxt": "E:\\BfeProject\\perf\\vi\\android\\app\\build\\outputs\\mapping\\release\\mapping.txt",
+    "--apk": "E:\\BfeProject\\perf\\vi\\android\\app\\build\\outputs\\apk\\release\\app-release.apk",
+    "--output": "E:\\BfeProject\\perf\\vi\\android\\app\\build/outputs/apk-checker-result",
     "--formatConfig": [{
         "name": "-countMethod",
         "group": [

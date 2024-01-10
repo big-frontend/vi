@@ -1,11 +1,16 @@
 package com.electrolytej.vi
 
+import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.api.BaseVariant
 import com.didiglobal.booster.gradle.assembleTaskProvider
 import com.didiglobal.booster.gradle.project
+import com.didiglobal.booster.gradle.symbolList
+import com.didiglobal.booster.kotlinx.OS
 import com.didiglobal.booster.task.spi.VariantProcessor
 import com.google.auto.service.AutoService
+import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.DefaultTask
+import org.gradle.api.Project
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import org.json.JSONObject
@@ -14,21 +19,13 @@ import java.io.File
 @AutoService(VariantProcessor::class)
 class ApkAnalysisVariantProcessor : VariantProcessor {
     override fun process(variant: BaseVariant) {
-        val tp = variant.project.tasks.register("analyze${variant.name.capitalize()}Apk", ApkAnalyzerTask::class.java){
+        val tp = variant.project.tasks.register("analyse${variant.name.capitalize()}ApkWithMatrix", ApkAnalyzerTask::class.java){
             it.group = "booster"
             it.variant = variant
         }
         tp.configure{
             it.dependsOn(variant.assembleTaskProvider)
         }
-//        variant.project.gradle.projectsEvaluated { gradle ->
-//            gradle.rootProject.allprojects {project->
-//                tp.configure {
-//
-//                    it.dependsOn("${project.path}:assemble${variant.name.capitalize()}")
-//                }
-//            }
-//        }
     }
 }
 abstract class ApkAnalyzerTask : DefaultTask() {
@@ -37,10 +34,7 @@ abstract class ApkAnalyzerTask : DefaultTask() {
     @TaskAction
     fun analyze() {
         val configPath = "${project.rootDir}/apk-checker-config.json"
-        var mappingFile: File? = null
-        try {
-            mappingFile = variant.findMappingTxtFile()
-        }catch (_: Exception){ }
+        val mappingFile = variant.mappingFileProvider?.get()?.singleFile
         val f = project.file(configPath)
         f.inputStream().bufferedReader().use { reader ->
             val config = JSONObject(reader.readText())
@@ -70,10 +64,44 @@ abstract class ApkAnalyzerTask : DefaultTask() {
         project.javaexec {
             it.main = "-jar"
             it.args = listOf(
-                project.findApkAnalyzer().absolutePath,
+                findApkAnalyzer().absolutePath,
                 "--config",
                 configPath
             )
         }
     }
+    fun findApkAnalyzer() =
+        Jar.getResourceAsFile("/matrix-apk-canary-2.0.8.jar", ApkAnalysisVariantProcessor::class.java)
 }
+
+fun BaseVariant.findRTxtFile(): File {
+    return symbolList.singleFile
+}
+
+fun Project.findToolnm(): File? {
+    val extension = (extensions.findByType(BaseExtension::class.java) as BaseExtension)
+    val adb = extension.adbExecutable
+    val ndkVersion = extension.ndkVersion
+    if (ndkVersion.isNullOrEmpty()){
+        return null
+    }
+//    val SO_ARCH = 'arm-linux-androideabi'
+    val SO_ARCH = "aarch64-linux-android"
+    val platform = if (Os.isFamily(Os.FAMILY_WINDOWS)){
+        "windows-x86_64"
+    }else if (Os.isFamily(Os.FAMILY_MAC) || OS.isMac()){
+        "darwin-x86_64"
+    }else{
+        "linux-x86_64"
+    }
+    val nm = if (Os.isFamily(Os.FAMILY_WINDOWS)){
+        "${SO_ARCH}-nm.exe"
+    }else if (Os.isFamily(Os.FAMILY_MAC) || OS.isMac()){
+        "${SO_ARCH}-nm"
+    }else{
+        "${SO_ARCH}-nm"
+    }
+    return File(adb.parentFile.parentFile,"ndk").resolve(ndkVersion).resolve("toolchains")
+        .resolve("${SO_ARCH}-4.9").resolve("prebuilt").resolve(platform).resolve("bin").resolve(nm)
+}
+

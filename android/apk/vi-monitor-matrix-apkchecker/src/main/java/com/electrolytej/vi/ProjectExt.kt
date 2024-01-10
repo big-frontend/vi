@@ -11,44 +11,6 @@ import java.io.File
 import java.io.FileInputStream
 import java.util.*
 
-fun BaseVariant.findMappingTxtFile(): File? {
-    return mappingFileProvider.get().singleFile
-}
-
-fun BaseVariant.findRTxtFile(): File {
-    return symbolList.singleFile
-}
-
-fun Project.findToolnm(): File? {
-    val extension = (extensions.findByType(BaseExtension::class.java) as BaseExtension)
-    val adb = extension.adbExecutable
-    val ndkVersion = extension.ndkVersion
-    if (ndkVersion.isNullOrEmpty()){
-        return null
-    }
-//    val SO_ARCH = 'arm-linux-androideabi'
-    val SO_ARCH = "aarch64-linux-android"
-    val platform = if (Os.isFamily(Os.FAMILY_WINDOWS)){
-        "windows-x86_64"
-    }else if (Os.isFamily(Os.FAMILY_MAC) || OS.isMac()){
-        "darwin-x86_64"
-    }else{
-        "linux-x86_64"
-    }
-    val nm = if (Os.isFamily(Os.FAMILY_WINDOWS)){
-        "${SO_ARCH}-nm.exe"
-    }else if (Os.isFamily(Os.FAMILY_MAC) || OS.isMac()){
-        "${SO_ARCH}-nm"
-    }else{
-        "${SO_ARCH}-nm"
-    }
-    return project.file(adb.parentFile).resolve("ndk").resolve(ndkVersion).resolve("toolchains")
-        .resolve("${SO_ARCH}-4.9").resolve("prebuilt").resolve(platform).resolve("bin").resolve(nm)
-}
-
-fun Project.findApkAnalyzer() =
-    Jar.getResourceAsFile("/matrix-apk-canary-2.0.8.jar", ApkAnalysisVariantProcessor::class.java)
-
 
 fun Project.findBuildTools(): File {
     val extension = project.extensions.findByType(BaseExtension::class.java)
