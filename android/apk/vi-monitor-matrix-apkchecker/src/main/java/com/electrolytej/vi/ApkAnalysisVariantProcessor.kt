@@ -3,9 +3,11 @@ package com.electrolytej.vi
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.api.BaseVariant
 import com.didiglobal.booster.gradle.assembleTaskProvider
+import com.didiglobal.booster.gradle.packageBundleTaskProvider
 import com.didiglobal.booster.gradle.project
 import com.didiglobal.booster.gradle.symbolList
 import com.didiglobal.booster.kotlinx.OS
+import com.didiglobal.booster.kotlinx.matches
 import com.didiglobal.booster.task.spi.VariantProcessor
 import com.google.auto.service.AutoService
 import org.apache.tools.ant.taskdefs.condition.Os
@@ -38,9 +40,9 @@ abstract class ApkAnalyzerTask : DefaultTask() {
         val f = project.file(configPath)
         f.inputStream().bufferedReader().use { reader ->
             val config = JSONObject(reader.readText())
-            config.put("--apk", variant.outputs.first().outputFile.absolutePath)
+            if (!config.has("--apk")) config.put("--apk", variant.outputs.first().outputFile.absolutePath)
             if (mappingFile?.exists() == true){ config.put("--mappingTxt", mappingFile.absolutePath) }
-            config.put("--output", "${project.buildDir}/outputs/apk-checker-result")
+            if (!config.has("--output")) config.put("--output", "${project.buildDir}/outputs/apk-checker-result")
             val options = config.optJSONArray("options")
             for (i in 0 until options.length()) {
                 val o = options.getJSONObject(i)
