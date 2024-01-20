@@ -78,7 +78,9 @@ open class MinifyApFiles : DefaultTask() {
         }
         files.parallelStream().forEach { ap_ ->
             //    val dest = File.createTempFile(SdkConstants.FN_RES_BASE + SdkConstants.RES_QUALIFIER_SEP, SdkConstants.DOT_RES)
-            optimizers.forEach { it.start(variant, symbols, ap_) }
+            optimizers.forEach {
+                it.start(variant, symbols, ap_)
+            }
             ap_.minify(optimizers)
             optimizers.forEach { it.end(ap_) }
         }

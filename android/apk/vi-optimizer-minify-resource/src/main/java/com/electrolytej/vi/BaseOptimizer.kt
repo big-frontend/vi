@@ -11,7 +11,9 @@ interface BaseOptimizer {
     fun start(variant: BaseVariant?, symbols: SymbolList, ap_: File) {
 
     }
-
+    /**
+     * true：拦截不传递给下一个优化器
+     */
     fun processArsc(resourceFile: ResourceFile): Boolean
 
     /**
