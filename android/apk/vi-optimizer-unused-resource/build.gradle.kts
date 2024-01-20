@@ -4,7 +4,6 @@ plugins {
     kotlin("jvm")
     kotlin("kapt")
     id("io.johnsonlee.sonatype-publish-plugin")
-    id("com.github.johnrengelman.shadow")
     id("io.johnsonlee.buildprops")
 }
 val GROUP_ID :String by project
@@ -41,9 +40,4 @@ dependencies{
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$KOTLIN_VERSION")
     testImplementation("io.bootstage.testkit:testkit-gradle-plugin:1.4.0")
     testImplementation(gradleTestKit())
-}
-tasks.register("shadowViJar", ShadowJar::class.java) {
-    classifier = "all"
-//    baseName = project.name
-//    version = project.version.toInt()
 }

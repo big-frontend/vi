@@ -35,7 +35,7 @@ buildscript {
         classpath("io.github.electrolytej:vi-monitor-matrix-apkchecker:1.0.0-SNAPSHOT")
 //        classpath("io.github.electrolytej:vi-transform-startup:1.0.0-SNAPSHOT")
         classpath("io.github.electrolytej:vi-optimizer-minify-resource:1.0.0-SNAPSHOT")
-        classpath("io.github.electrolytej:vi-optimizer-duplicated-files:1.0.0-SNAPSHOT")
+//        classpath("io.github.electrolytej:vi-optimizer-duplicated-resource:1.0.0-SNAPSHOT")
     }
 }
 plugins {
