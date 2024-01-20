@@ -1,8 +1,6 @@
 package com.electrolytej.vi
 
 import com.android.build.gradle.api.BaseVariant
-import com.didiglobal.booster.gradle.getProperty
-import com.didiglobal.booster.gradle.project
 import com.didiglobal.booster.kotlinx.Wildcard
 import com.google.auto.service.AutoService
 import pink.madis.apk.arsc.ResourceFile
@@ -10,9 +8,9 @@ import java.io.File
 import java.util.zip.ZipEntry
 import java.util.zip.ZipFile
 @AutoService(BaseOptimizer::class)
-class DuplicatedFilesOptimizer : BaseOptimizer {
+class DuplicatedResourceOptimizer : BaseOptimizer {
     companion object {
-        private const val DUPLICATED_PROPERTY_IGNORES = "vi.optimizer.duplicated.files.ignores"
+        private const val DUPLICATED_PROPERTY_IGNORES = "vi.optimizer.duplicated.resource.ignores"
     }
 
     private  var duplicatedIgnores: Set<Wildcard> = mutableSetOf()
@@ -24,7 +22,7 @@ class DuplicatedFilesOptimizer : BaseOptimizer {
     private lateinit var logger: L
     override fun start(variant: BaseVariant?, symbols: SymbolList, ap_: File) {
         this.symbols = symbols
-        this.logger = L.create(variant,"vi-optimizer-duplicated-files")
+        this.logger = L.create(variant,"vi-optimizer-duplicated-resource")
         if (variant != null) {
             this.variant = variant
 //        this.duplicatedIgnores =
@@ -34,10 +32,10 @@ class DuplicatedFilesOptimizer : BaseOptimizer {
         }
         logger.println("$DUPLICATED_PROPERTY_IGNORES=$duplicatedIgnores\n")
         if (this.symbols.isEmpty()) {
-//            logger_.error("remove duplicated files failed: R.txt doesn't exist or blank")
+//            logger_.error("remove duplicated resource failed: R.txt doesn't exist or blank")
             return
         }
-        //1.find duplicated files from ap file
+        //1.find duplicated resource from ap file
         ZipFile(ap_).use {
             it.findDuplicatedFiles(
                 filter = { entry ->
@@ -54,11 +52,11 @@ class DuplicatedFilesOptimizer : BaseOptimizer {
         }
 
         s0 = ap_.length()
-        logger.println("Delete duplicated files:")
+        logger.println("Delete duplicated resource:")
     }
 
     override fun processArsc(resourceFile: ResourceFile):Boolean {
-        //2.remove duplicated files  and repack ap file
+        //2.remove duplicated resource  and repack ap file
         val rmDuplicated = mapOfDuplicatesReplacements.isNotEmpty()
         //remove duplicated resources
         if (rmDuplicated) {

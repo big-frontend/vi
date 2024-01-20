@@ -17,9 +17,17 @@ java {
 val AGP_VERSION :String by project
 val KOTLIN_VERSION :String by project
 dependencies{
-    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    testImplementation(gradleTestKit())
+    testCompileOnly("com.android.tools.build:gradle:${AGP_VERSION}")
+    testCompileOnly("com.android.tools.build:builder:${AGP_VERSION}")
+    testCompileOnly(project(":apk:vi-optimizer-minify-resource"))
+    testImplementation("org.jetbrains.kotlin:kotlin-test:$KOTLIN_VERSION")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$KOTLIN_VERSION")
+    testImplementation("io.bootstage.testkit:testkit-gradle-plugin:1.4.0")
     testImplementation("org.testng:testng:6.9.6")
     testImplementation(project(":apk:vi-optimizer-minify-resource"))
+
+    implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
     kapt("com.google.auto.service:auto-service:1.0")
     compileOnly(gradleApi())
     compileOnly("com.android.tools.build:gradle:${AGP_VERSION}")
@@ -35,11 +43,5 @@ dependencies{
     implementation("pink.madis.apk.arsc:android-chunk-utils:0.0.7")
     implementation("org.smali:smali:2.2.7")
     implementation("org.smali:baksmali:2.2.7")
-    testCompileOnly("com.android.tools.build:gradle:${AGP_VERSION}")
-    testCompileOnly("com.android.tools.build:builder:${AGP_VERSION}")
-    testCompileOnly(project(":apk:vi-optimizer-minify-resource"))
-    testImplementation("org.jetbrains.kotlin:kotlin-test:$KOTLIN_VERSION")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$KOTLIN_VERSION")
-    testImplementation("io.bootstage.testkit:testkit-gradle-plugin:1.4.0")
-    testImplementation(gradleTestKit())
+
 }

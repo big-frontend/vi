@@ -10,7 +10,7 @@ import java.util.zip.ZipFile
 val PWD = File(System.getProperty("user.dir"))
 
 class ApFileTest {
-    private val PROPERTY_IGNORES = "vi.optimizer.duplicated.files.ignores"
+    private val PROPERTY_IGNORES = "vi.optimizer.duplicated.resource.ignores"
 
     @Test
     fun `remove dup resource in ap file`() {
@@ -20,7 +20,7 @@ class ApFileTest {
             .filter(String::isNotEmpty)
             .map(Wildcard.Companion::valueOf).toSet()
         assertFalse { symbols.isEmpty() }
-        val optimizers = listOf(DuplicatedFilesOptimizer())
+        val optimizers = listOf(DuplicatedResourceOptimizer())
         //    val dest = File.createTempFile(SdkConstants.FN_RES_BASE + SdkConstants.RES_QUALIFIER_SEP, SdkConstants.DOT_RES)
         optimizers.forEach { it.start(null, symbols, ap_) }
         ap_.minify(optimizers)

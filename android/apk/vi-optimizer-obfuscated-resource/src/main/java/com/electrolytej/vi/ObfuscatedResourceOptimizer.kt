@@ -18,11 +18,11 @@ import java.util.zip.ZipFile
 @AutoService(BaseOptimizer::class)
 class ObfuscatedResourceOptimizer : BaseOptimizer {
     companion object {
-        private const val OBFUSCATED_PROPERTY_IGNORES = "vi.optimizer.obfuscated.files.ignores"
+        private const val OBFUSCATED_PROPERTY_IGNORES = "vi.optimizer.obfuscated.resource.ignores"
         private const val RES_DIR_PROGUARD_NAME = "r"
     }
 
-    private lateinit var obfuscatedIgnores: Set<Wildcard>
+    private val obfuscatedIgnores: Set<Wildcard> = mutableSetOf()
     val mapOfObfuscatedResource = mutableMapOf<String, Pair<SymbolList.IntSymbol, String>>()
     private val mappings = mutableMapOf<String, String>()
 
@@ -34,9 +34,9 @@ class ObfuscatedResourceOptimizer : BaseOptimizer {
         this.logger = L.create(variant,"vi-optimizer-obfuscated-resource")
         if (variant != null) {
             this.variant = variant
-            this.obfuscatedIgnores =
-                variant.project.getProperty(OBFUSCATED_PROPERTY_IGNORES, "").trim().split(',')
-                    .filter(String::isNotEmpty).map(Wildcard.Companion::valueOf).toSet()
+//            this.obfuscatedIgnores =
+//                variant.project.getProperty(OBFUSCATED_PROPERTY_IGNORES, "").trim().split(',')
+//                    .filter(String::isNotEmpty).map(Wildcard.Companion::valueOf).toSet()
         }
         logger.println("$OBFUSCATED_PROPERTY_IGNORES=$obfuscatedIgnores\n")
         symbols.obfuscatedResId(
@@ -203,17 +203,17 @@ class ObfuscatedResourceOptimizer : BaseOptimizer {
 //                    dirFileProguard[dir] = ProguardStringBuilder()
 //                    Log.i(MinifyTask.TAG, "dir %s, proguard builder", dir)
 //                }
-//                resultOfObfuscatedFiles[zipEntry.name] =
+//                resultOfObfuscatedResource[zipEntry.name] =
 //                    resultOfObfuscatedDirs[dir] + "/" + dirFileProguard[dir]!!.generateNextProguardFileName() + suffix
 //                val success = ArscUtil.replaceResFileName(
 //                    resTable,
 //                    mapOfResources[resourceName]!!,
 //                    zipEntry.name,
-//                    resultOfObfuscatedFiles[zipEntry.name]
+//                    resultOfObfuscatedResource[zipEntry.name]
 //                )
 //                if (success) {
 //                    destFile =
-//                        unzipDir.canonicalPath + File.separator + resultOfObfuscatedFiles[zipEntry.name]!!.replace(
+//                        unzipDir.canonicalPath + File.separator + resultOfObfuscatedResource[zipEntry.name]!!.replace(
 //                            '/', File.separatorChar
 //                        )
 //                }
@@ -224,7 +224,7 @@ class ObfuscatedResourceOptimizer : BaseOptimizer {
 
     override fun end(ap_: File) {
         val s1 = ap_.length()
-        //                logger.println("Delete obfuscated files:")
+        //                logger.println("Delete obfuscated resource:")
 //                logger.println("-".repeat(maxWidth))
 
         // 收尾删除 res2
