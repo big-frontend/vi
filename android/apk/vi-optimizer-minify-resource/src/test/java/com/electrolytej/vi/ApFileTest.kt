@@ -1,11 +1,7 @@
 package com.electrolytej.vi
 
-import com.didiglobal.booster.kotlinx.Wildcard
-import com.didiglobal.booster.kotlinx.file
 import java.io.File
-import java.util.zip.ZipFile
 import kotlin.test.Test
-import kotlin.test.assertFalse
 
 val PWD = File(System.getProperty("user.dir"))
 class ApFileTest{

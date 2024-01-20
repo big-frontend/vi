@@ -2,7 +2,7 @@ package com.electrolytej.vi
 
 import com.didiglobal.booster.kotlinx.Wildcard
 import com.didiglobal.booster.kotlinx.file
-import org.gradle.internal.impldep.org.junit.Test
+import kotlin.test.Test
 import java.io.File
 import java.util.zip.ZipFile
 import kotlin.test.assertFalse
