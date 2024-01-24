@@ -1,6 +1,6 @@
-package com.electrolytej.vi;
+package com.electrolytej.render;
 
-import static com.electrolytej.vi.render.FpsKt.TAG_FRAME_MONITOR;
+import static com.electrolytej.render.FpsKt.TAG_FRAME_MONITOR;
 
 import androidx.annotation.Keep;
 

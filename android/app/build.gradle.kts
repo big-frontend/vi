@@ -79,4 +79,6 @@ dependencies {
     implementation(project(":startup:vi-optimizer-tasklist-composer"))
     implementation(project(":vi-api"))
     implementation(project(":stability:vi-monitor-anr"))
+    implementation(project(":startup:vi-monitor-startup"))
+    implementation(project(":render:vi-monitor-render"))
 }

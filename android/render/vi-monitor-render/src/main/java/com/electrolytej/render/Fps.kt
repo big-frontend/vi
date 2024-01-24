@@ -1,16 +1,18 @@
-package com.electrolytej.vi
+package com.electrolytej.render
 
 import android.app.Activity
 import android.app.Application
 import android.content.ComponentName
+import android.content.Context
 import android.os.*
 import android.util.ArrayMap
 import android.util.Log
 import android.view.*
 import androidx.annotation.Keep
 import androidx.annotation.RequiresApi
-import com.electrolytej.vi.lifecycle.AbsActivitiesLifecycleObserver
-import com.electrolytej.vi.lifecycle.AbsAppLifecycleObserver
+import com.electrolytej.vi.AbsHookRegistry
+import com.electrolytej.vi.lifecycle.AbsLifecycleObserver
+import com.google.auto.service.AutoService
 import java.util.concurrent.TimeUnit
 
 /** fps监控方案(通过监控主线程执行耗时，当超过阈值（微信认为700ms为卡顿阈值，携程认为600ms为长卡顿还可以接受，短卡顿5次发生），dump出当前线程的执行堆栈。)
@@ -21,9 +23,15 @@ import java.util.concurrent.TimeUnit
  *  收集的帧数大于300帧时，处理300帧都是level，如果帧数消耗时间总计为10s就上报这10s内的所有帧数情况。
  */
 const val TAG_FRAME_MONITOR = "fps-monitor"
+@AutoService(AbsLifecycleObserver::class)
 @Keep
-class FpsItem(val app: Application) : AbsActivitiesLifecycleObserver(), AbsAppLifecycleObserver {
-    private val mFpsItem = FpsView(app)
+class FpsItem : AbsLifecycleObserver(){
+    private lateinit var mFpsItem: FpsView
+    private lateinit var app: Application
+    override fun bindApplication(application: Application) {
+        app = application
+        mFpsItem = FpsView(app)
+    }
     override fun onAppCreate() {
         mFpsItem.setVisible(true)
     }
@@ -187,6 +195,18 @@ class FpsItem(val app: Application) : AbsActivitiesLifecycleObserver(), AbsAppLi
      * 一帧消耗700ms就说明存在慢函数，然后上报每个函数的耗时
      */
     class EvilMethodChecker {
+    }
+}
+
+@AutoService(AbsHookRegistry::class)
+@Keep
+class RenderHookRegistry : AbsHookRegistry() {
+    override fun registerItem(h: MutableList<String>) {
+        h.add(Hook_Choreographer_doCallbacks::class.java.name)
+        h.add(Hook_ExternalBeginFrameSourceAndroid_doFrame::class.java.name)
+    }
+
+    override fun attachBaseContext(base: Context) {
     }
 }
 

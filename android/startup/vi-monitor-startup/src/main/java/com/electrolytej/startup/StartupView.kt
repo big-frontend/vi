@@ -1,4 +1,4 @@
-package com.electrolytej.vi
+package com.electrolytej.startup
 
 import android.content.Context
 import android.graphics.PixelFormat
@@ -9,6 +9,9 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.TextView
+import com.electrolytej.vi.DebugOverlayController
+import com.electrolytej.vi.R
+import com.electrolytej.vi.WindowOverlayCompat
 import com.electrolytej.vi.util.UiThreadUtil
 
 class StartupView @JvmOverloads constructor(

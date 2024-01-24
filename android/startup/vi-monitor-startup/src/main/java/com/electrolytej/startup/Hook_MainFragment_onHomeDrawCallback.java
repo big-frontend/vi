@@ -1,6 +1,6 @@
-package com.electrolytej.vi;
+package com.electrolytej.startup;
 
-import static com.electrolytej.vi.StartupKt.TAG_STARTUP_MONITOR;
+import static com.electrolytej.startup.StartupKt.TAG_STARTUP_MONITOR;
 import androidx.annotation.Keep;
 import androidx.fragment.app.Fragment;
 import com.electrolytej.vi.util.TraceUtil;

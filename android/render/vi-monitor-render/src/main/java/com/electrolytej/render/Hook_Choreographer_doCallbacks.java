@@ -1,4 +1,4 @@
-package com.electrolytej.vi;
+package com.electrolytej.render;
 
 import androidx.annotation.Keep;
 

@@ -8,7 +8,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.lang.reflect.Member;
 import java.util.List;
 
 import android.os.Build;
@@ -50,9 +49,9 @@ public class HookMain {
         try {
             Class<?> hookInfoClass = Class.forName("lab.galaxy.yahfa.HookInfo", true, originClassLoader);
             List<String> hookItemNames = (List<String>) hookInfoClass.getField("hookItemNames").get(null);
-//            Method initMethod = hookInfoClass.getDeclaredMethod("attachBaseContext", Context.class);
-//            initMethod.setAccessible(true);
-//            initMethod.invoke(null, ctx);
+            Method initMethod = hookInfoClass.getDeclaredMethod("attachBaseContext", Context.class);
+            initMethod.setAccessible(true);
+            initMethod.invoke(null, ctx);
             for (String hookItemName : hookItemNames) {
                 doHookItemDefault(originClassLoader, hookItemName, originClassLoader);
             }

@@ -1,4 +1,4 @@
-package com.electrolytej.vi;
+package com.electrolytej.startup;
 
 import android.app.Activity;
 import android.util.Log;

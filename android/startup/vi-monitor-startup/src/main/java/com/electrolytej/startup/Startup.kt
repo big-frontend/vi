@@ -1,4 +1,4 @@
-package com.electrolytej.vi
+package com.electrolytej.startup
 
 import android.app.Activity
 import android.app.Application
@@ -18,11 +18,15 @@ import androidx.appcompat.app.AppCompatViewInflater
 import androidx.core.view.LayoutInflaterCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import com.electrolytej.vi.AbsHookRegistry
+import com.electrolytej.vi.ActivityThreadHacker
 import com.electrolytej.vi.lifecycle.AbsActivitiesLifecycleObserver
 import com.electrolytej.vi.lifecycle.AbsAppLifecycleObserver
+import com.electrolytej.vi.lifecycle.AbsLifecycleObserver
 import com.electrolytej.vi.util.CpuUtil
 import com.electrolytej.vi.util.DeviceUtil
 import com.electrolytej.vi.util.MemoryUtil
+import com.google.auto.service.AutoService
 import java.lang.ref.WeakReference
 import java.util.Locale
 
@@ -43,17 +47,15 @@ import java.util.Locale
  *  - App#attachBaseContext --> ContentProvider#attachInfo --> ContentProvider#onCreate--->App#onCreate
  */
 const val TAG_STARTUP_MONITOR = "startup-monitor"
-
+@AutoService(AbsLifecycleObserver::class)
 @Keep
-class StartupItem(val app: Application) : AbsActivitiesLifecycleObserver(),
-    AbsAppLifecycleObserver {
+class StartupItem : AbsLifecycleObserver(){
     companion object {
         private val sFocusActivitySet = mutableSetOf<String>()
     }
 
     private val arrayMap = ArrayMap<ComponentName, Long>()
     private val activityState = ArrayMap<ComponentName, Int>()
-    private var mStartupView = StartupView(app)
     private var mColdCost = 0L
     private var mWarmCost = 0L
     private var mHotCost = 0L
@@ -65,7 +67,12 @@ class StartupItem(val app: Application) : AbsActivitiesLifecycleObserver(),
     private var mLastCreateActivity = 0L
     private var mLastForegroundActivity = 0L
     private var mFirstScreenCost: Long = 0
-
+    private lateinit var mStartupView: StartupView
+    private lateinit var app: Application
+    override fun bindApplication(application: Application) {
+        app = application
+        mStartupView = StartupView(app)
+    }
     override fun onAppCreate() {
         Log.e(TAG_STARTUP_MONITOR, "onAppCreate")
         mStartupView.setVisible(true)
@@ -357,5 +364,24 @@ class LayoutInflateItem : AbsAppLifecycleObserver, AbsActivitiesLifecycleObserve
             Log.d(TAG_LAYOUT_MONITOR, "onCreateView 2:$name")
             return null
         }
+    }
+}
+
+@AutoService(AbsHookRegistry::class)
+@Keep
+class StartupHookRegistry : AbsHookRegistry() {
+    override fun registerItem(h: MutableList<String>) {
+        h.add(Hook_ActivityThread_installContentProviders::class.java.name)
+        h.add(Hook_ActivityThread_installProvider::class.java.name)
+        h.add(Hook_PerfApp_onCreate::class.java.name)
+        h.add(Hook_MainActivity_onCreate::class.java.name)
+        h.add(Hook_MainActivity_onStart::class.java.name)
+        h.add(Hook_MainActivity_onResume::class.java.name)
+        h.add(Hook_MainActivity_onWindowFocusChanged::class.java.name)
+        h.add(Hook_MainFragment_onCreateView::class.java.name)
+        h.add(Hook_MainFragment_onViewCreated::class.java.name)
+    }
+
+    override fun attachBaseContext(base: Context) {
     }
 }

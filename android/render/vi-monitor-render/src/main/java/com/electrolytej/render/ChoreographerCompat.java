@@ -1,4 +1,4 @@
-package com.electrolytej.vi;
+package com.electrolytej.render;
 
 import android.os.Handler;
 import android.view.Choreographer;

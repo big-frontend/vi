@@ -1,6 +1,6 @@
-package com.electrolytej.vi;
+package com.electrolytej.startup;
 
-import static com.electrolytej.vi.StartupKt.TAG_STARTUP_MONITOR;
+import static com.electrolytej.startup.StartupKt.TAG_STARTUP_MONITOR;
 
 import android.os.Bundle;
 import android.view.View;
