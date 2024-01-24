@@ -34,6 +34,6 @@ sourceCompatibility = "11"
 targetCompatibility = "11"
 jar {
     manifest {
-        attributes("Lint-Registry": "com.jamesfchen.lint.IssueRegistry")
+        attributes("Lint-Registry": "com.electrolytej.vi.IssueRegistry")
     }
 }

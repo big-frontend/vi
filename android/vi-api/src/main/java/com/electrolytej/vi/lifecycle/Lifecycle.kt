@@ -15,9 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.DefaultLifecycleObserver
-import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.ProcessLifecycleOwner
 
 abstract class AbsFragmentLifecycleCallbacks : FragmentManager.FragmentLifecycleCallbacks() {
 
@@ -417,19 +415,6 @@ fun initLifecycle(application: Application) {
         })
     }
 }
-
-fun registerLifecycle(clz: Class<*>) {
-    try {
-        val constructor = clz.getConstructor(Application::class.java)
-        val observer: Any = constructor.newInstance(mApp) as LifecycleObserver
-        ProcessLifecycleOwner.get().lifecycle.addObserver((observer as DefaultLifecycleObserver))
-        activitiesListeners.add(observer as AbsActivitiesLifecycleObserver)
-    } catch (e: InstantiationException) {
-        e.printStackTrace()
-    } catch (e: IllegalAccessException) {
-        e.printStackTrace()
-    } catch (e: Exception) {
-        e.printStackTrace()
-
-    }
+abstract class AbsLifecycleObserver : AbsActivitiesLifecycleObserver(), AbsAppLifecycleObserver{
+    abstract fun bindApplication(application: Application)
 }

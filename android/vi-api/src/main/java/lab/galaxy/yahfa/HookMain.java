@@ -1,5 +1,6 @@
 package lab.galaxy.yahfa;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.lang.reflect.Constructor;
@@ -8,6 +9,8 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.lang.reflect.Member;
+import java.util.List;
+
 import android.os.Build;
 
 import androidx.annotation.Keep;
@@ -43,15 +46,18 @@ public class HookMain {
         init(buildSdk);
     }
 
-    public static void doHookDefault(ClassLoader originClassLoader) {
+    public static void doHookDefault(ClassLoader originClassLoader, Context ctx) {
         try {
             Class<?> hookInfoClass = Class.forName("lab.galaxy.yahfa.HookInfo", true, originClassLoader);
-            String[] hookItemNames = (String[]) hookInfoClass.getField("hookItemNames").get(null);
+            List<String> hookItemNames = (List<String>) hookInfoClass.getField("hookItemNames").get(null);
+//            Method initMethod = hookInfoClass.getDeclaredMethod("attachBaseContext", Context.class);
+//            initMethod.setAccessible(true);
+//            initMethod.invoke(null, ctx);
             for (String hookItemName : hookItemNames) {
                 doHookItemDefault(originClassLoader, hookItemName, originClassLoader);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("HookInfo", Log.getStackTraceString(e));
         }
     }
 

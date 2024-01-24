@@ -14,10 +14,10 @@
  *
  *
  * matrix：
- *  * firstMethod.i       LAUNCH_ACTIVITY   onWindowFocusChange   LAUNCH_ACTIVITY    onWindowFocusChange
- *  * ^                         ^                   ^                     ^                  ^
- *  * |                         |                   |                     |                  |
- *  * |---------app---------|---|---firstActivity---|---------...---------|---careActivity---|
+ *  * firstMethod.i       LAUNCH_ACTIVITY   onWindowFocusChange   LAUNCH_ACTIVITY    onWindowFocusChange         first render
+ *  * ^                         ^                   ^                     ^                  ^                        ^
+ *  * |                         |                   |                     |                  |                        |
+ *  * |---------app---------|---|---firstActivity---|---------...---------|---careActivity---|  ---------...--------- |
  *  * |<--applicationCost-->|
  *  * |<----firstScreenCost---->|
  *  * |<---------------------------allCost(cold)------------------------->|

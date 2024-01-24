@@ -1,6 +1,6 @@
-package com.electrolytej.vi;
+package com.electrolytej.anr;
 
-import static com.electrolytej.vi.AnrKt.TAG_ANR_MONITOR;
+import static com.electrolytej.anr.AnrKt.TAG_ANR_MONITOR;
 
 import android.os.Handler;
 import android.os.HandlerThread;

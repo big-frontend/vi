@@ -26,27 +26,29 @@ buildscript {
         classpath("com.didiglobal.booster:booster-transform-br-inline:$booster_version")
 //        classpath("com.didiglobal.booster:booster-task-resource-deredundancy:$booster_version")
 
-        classpath("com.didiglobal.booster:booster-task-analyser:$booster_version")
+//        classpath("com.didiglobal.booster:booster-task-analyser:$booster_version")
 //            classpath("com.didiglobal.booster:booster-transform-usage:$booster_version")
-        classpath("com.didiglobal.booster:booster-task-list-shared-library:$booster_version")
-        classpath("com.didiglobal.booster:booster-task-list-artifact:$booster_version")
-        classpath("com.didiglobal.booster:booster-task-check-snapshot:$booster_version")
+//        classpath("com.didiglobal.booster:booster-task-list-shared-library:$booster_version")
+//        classpath("com.didiglobal.booster:booster-task-list-artifact:$booster_version")
+//        classpath("com.didiglobal.booster:booster-task-check-snapshot:$booster_version")
 //        classpath("com.didiglobal.booster:booster-transform-usage:$booster_version")
-        classpath("io.github.electrolytej:vi-monitor-matrix-apkchecker:1.0.0-SNAPSHOT")
+//        classpath("io.github.electrolytej:vi-monitor-matrix-apkchecker:1.0.0-SNAPSHOT")
 //        classpath("io.github.electrolytej:vi-transform-startup:1.0.0-SNAPSHOT")
-        classpath("io.github.electrolytej:vi-optimizer-minify-resource:1.0.0-SNAPSHOT")
-        classpath("io.github.electrolytej:vi-optimizer-duplicated-resource:1.0.0-SNAPSHOT")
-        classpath("io.github.electrolytej:vi-optimizer-unused-resource:1.0.0-SNAPSHOT")
-        classpath("io.github.electrolytej:vi-optimizer-obfuscated-resource:1.0.0-SNAPSHOT")
+//        classpath("io.github.electrolytej:vi-optimizer-minify-resource:1.0.0-SNAPSHOT")
+//        classpath("io.github.electrolytej:vi-optimizer-duplicated-resource:1.0.0-SNAPSHOT")
+//        classpath("io.github.electrolytej:vi-optimizer-unused-resource:1.0.0-SNAPSHOT")
+//        classpath("io.github.electrolytej:vi-optimizer-obfuscated-resource:1.0.0-SNAPSHOT")
     }
 }
 plugins {
     id("com.android.application") version "7.4.1" apply false
     id("com.android.library") version "7.4.1" apply false
-//    kotlin("android") version "1.8.22" apply false
-//    kotlin("jvm") version "1.8.22" apply false
+    kotlin("android") version "1.8.22" apply false
+    kotlin("kapt") version "1.8.22" apply false
+    kotlin("jvm") version "1.8.22" apply false
     id("io.johnsonlee.sonatype-publish-plugin") version "1.7.0" apply false
-    id("org.jetbrains.kotlin.jvm") version "1.8.22" apply false
+//    id("org.jetbrains.kotlin.jvm") version "1.8.22" apply false
+//    id("org.jetbrains.kotlin.android") version "1.8.22" apply false
     id("io.johnsonlee.buildprops") version "1.2.0" apply false
     id("com.github.johnrengelman.shadow") version "6.1.0" apply false
 }

@@ -4,7 +4,7 @@ publish {
     groupId = rootProject.GROUP_ID
     artifactId = "vi-api"
     version = "1.0.0"
-    website = "https://github.com/big-frontend/pisces"
+    website = "https://github.com/big-frontend/vi"
 }
 apply from: "$rootDir/aar.gradle"
 android {
@@ -43,7 +43,6 @@ android {
     }
     buildFeatures {
         prefab = true
-        prefabPublishing = true
     }
     packagingOptions {
         jniLibs.excludes.add("**/libdlfunc.so")
@@ -62,4 +61,5 @@ dependencies {
     lintPublish project(path: ':vi-lint-rules')
     implementation project(path: ':vi-lint-rules')
     implementation("io.github.rk700:dlfunc:0.1.1")
+    implementation("androidx.lifecycle:lifecycle-process:2.7.0")
 }

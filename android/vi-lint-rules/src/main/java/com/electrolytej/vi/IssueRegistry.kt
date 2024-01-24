@@ -10,7 +10,6 @@ class IssueRegistry : com.android.tools.lint.client.api.IssueRegistry() {
 
   override val issues
     get() = listOf(
-      ISSUE_ENUM_USAGE,
-      ISSUE_ANIMATION_DRAWABLE_USAGE,
+      ISSUE_LOGUTILITY,
     )
 }
