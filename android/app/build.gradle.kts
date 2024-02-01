@@ -81,4 +81,6 @@ dependencies {
     implementation(project(":stability:vi-monitor-anr"))
     implementation(project(":startup:vi-monitor-startup"))
     implementation(project(":render:vi-monitor-render"))
+    debugImplementation(project(":network:vi-tool-mitmproxy"))
+    implementation(project(":network:vi-monitor-http"))
 }

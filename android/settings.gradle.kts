@@ -56,4 +56,8 @@ include(
     ":stability:vi-monitor-bugly",
     ":stability:vi-monitor-anr",
 )
+include(
+    ":network:vi-tool-mitmproxy",
+    ":network:vi-monitor-http"
+)
 
