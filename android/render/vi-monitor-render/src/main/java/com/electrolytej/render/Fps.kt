@@ -87,49 +87,39 @@ class FpsItem : AbsLifecycleObserver(){
         ) {
             val frameMetricsCopy = FrameMetrics(frameMetrics)
             var metricslog = "${activity.componentName.shortClassName} frame metrics "
+            metricslog += "drop count:${dropCountSinceLastInvocation}\n"
+            val unknownDelayDurationNs = frameMetricsCopy.getMetric(FrameMetrics.UNKNOWN_DELAY_DURATION)
+            metricslog += "unknown delay:${convertMs(unknownDelayDurationNs)}ms"
+            val inputHandlerDurationNs = frameMetricsCopy.getMetric(FrameMetrics.INPUT_HANDLING_DURATION)
+            metricslog += "input handle:${convertMs(inputHandlerDurationNs)}ms\t"
+            val animationDurationNs = frameMetricsCopy.getMetric(FrameMetrics.ANIMATION_DURATION)
+            metricslog += "animation:${convertMs(animationDurationNs)}ms\t"
+            val layoutMeasureDurationNs = frameMetricsCopy.getMetric(FrameMetrics.LAYOUT_MEASURE_DURATION)
+            metricslog += "layout/measure:${convertMs(layoutMeasureDurationNs)}ms\t"
+            val drawDurationNs = frameMetricsCopy.getMetric(FrameMetrics.DRAW_DURATION)
+            metricslog += "draw:${convertMs(drawDurationNs)}ms\t"
+            val syncDurationNs = frameMetricsCopy.getMetric(FrameMetrics.SYNC_DURATION)
+            metricslog += "sync:${convertMs(syncDurationNs)}ms\t"
+            val commandIssueDurationNs = frameMetricsCopy.getMetric(FrameMetrics.COMMAND_ISSUE_DURATION)
+            metricslog += "command issue:${convertMs(commandIssueDurationNs)}ms\t"
+            val swapBuffersDurationNs = frameMetricsCopy.getMetric(FrameMetrics.SWAP_BUFFERS_DURATION)
+            metricslog += "swap buffers:${convertMs(swapBuffersDurationNs)}ms\t"
             val totalDurationNs = frameMetricsCopy.getMetric(FrameMetrics.TOTAL_DURATION)
             metricslog += "total:${convertMs(totalDurationNs)}ms\t"
             val firstDrawFrame = frameMetricsCopy.getMetric(FrameMetrics.FIRST_DRAW_FRAME)
             metricslog += "first draw frame:${firstDrawFrame}\t"
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val deadline = frameMetricsCopy.getMetric(FrameMetrics.DEADLINE)
-                metricslog += "deadline:${convertMs(deadline)}ms\t"
-            }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 val intendedVsyncNs = frameMetricsCopy.getMetric(FrameMetrics.INTENDED_VSYNC_TIMESTAMP)
                 metricslog += "intended vsync timestamp:${convertMs(intendedVsyncNs)}ms\t"
                 val vsyncNs = frameMetricsCopy.getMetric(FrameMetrics.VSYNC_TIMESTAMP)
                 metricslog += "vsync timestamp:${convertMs(vsyncNs)}ms\t"
             }
-            metricslog += "drop count:${dropCountSinceLastInvocation}\n"
-            val inputHandlerDurationNs = frameMetricsCopy.getMetric(FrameMetrics.INPUT_HANDLING_DURATION)
-            metricslog += "input handle:${convertMs(inputHandlerDurationNs)}ms\t"
-            val animationDurationNs =
-                frameMetricsCopy.getMetric(FrameMetrics.ANIMATION_DURATION)
-            metricslog += "animation:${convertMs(animationDurationNs)}ms\t"
-            // Layout measure duration in Nano seconds
-            val layoutMeasureDurationNs =
-                frameMetricsCopy.getMetric(FrameMetrics.LAYOUT_MEASURE_DURATION)
-            metricslog += "layout/measure:${convertMs(layoutMeasureDurationNs)}ms\t"
-            val drawDurationNs =
-                frameMetricsCopy.getMetric(FrameMetrics.DRAW_DURATION)
-            metricslog += "draw:${convertMs(drawDurationNs)}ms\t"
-            val syncDurationNs = frameMetricsCopy.getMetric(FrameMetrics.SYNC_DURATION)
-            metricslog += "sync:${convertMs(syncDurationNs)}ms\t"
-            val swapBuffersDurationNs =
-                frameMetricsCopy.getMetric(FrameMetrics.SWAP_BUFFERS_DURATION)
-            metricslog += "swap buffers:${convertMs(swapBuffersDurationNs)}ms\t"
-            val commandIssueDurationNs =
-                frameMetricsCopy.getMetric(FrameMetrics.COMMAND_ISSUE_DURATION)
-            metricslog += "command issue:${convertMs(commandIssueDurationNs)}ms\t"
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                val gpuDuration =
-                    frameMetricsCopy.getMetric(FrameMetrics.GPU_DURATION)
+                val gpuDuration = frameMetricsCopy.getMetric(FrameMetrics.GPU_DURATION)
                 metricslog += "gpu duration:${convertMs(gpuDuration)}ms\t"
+                val deadline = frameMetricsCopy.getMetric(FrameMetrics.DEADLINE)
+                metricslog += "deadline:${convertMs(deadline)}ms\t"
             }
-            val unknownDelayDurationNs =
-                frameMetricsCopy.getMetric(FrameMetrics.UNKNOWN_DELAY_DURATION)
-            metricslog += "unknown delay:${convertMs(unknownDelayDurationNs)}ms"
             Log.e(TAG_FRAME_MONITOR, metricslog)
         }
 
