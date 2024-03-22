@@ -32,11 +32,13 @@ def main():
                 print(line.strip(),sep='\n')
                 continue
             #解析一个线程信息
-            if "prio=" in line and "tid=" in line:
+                
+            if "prio=" in line and "tid=" in line and "Waiting" not in line and "TimedWaiting" not in line:
                 t = ThreadInfo()
                 t.t=line.strip()
                 while True:
                     line = f.readline()
+                    if not line:break
                     if line in ['\n','\r\n']:
                         break
                     if "utm=" in line:
