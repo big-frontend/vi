@@ -31,8 +31,11 @@ def main():
                     l = []
                 print(line.strip(),sep='\n')
                 continue
+            #内存使用情况
+            if "Max memory" in line or "Total memory" in line or "Heap:" in line:
+                print(line.strip(),sep='\n')
+                continue
             #解析一个线程信息
-                
             if "prio=" in line and "tid=" in line and "Waiting" not in line and "TimedWaiting" not in line:
                 t = ThreadInfo()
                 t.t=line.strip()
