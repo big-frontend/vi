@@ -32,7 +32,7 @@ def main():
                 appPkg = line.split("Package:")[1].split()[0].strip()
                 
         #cpu usage
-        print('0'*100)
+        print('anr log','0'*100)
         if "CPU usage" in line:
             print(line.strip(),sep='\n')
         while True:
@@ -42,19 +42,14 @@ def main():
                 break
             percent = line.split()[0].split("%")[0]
             
-            if float(percent) > 1:
+            if float(percent) > 2.0:
                print('\t'+line.strip(),end='\n')
             
             #if percent > '1.0%' and  ('kswapd0' in line or 'kworker' in line or 'pid' in line):
-            #    print(line.strip(),sep='\n')   
-
-
-                    
-        print('0'*100)        
+            #    print(line.strip(),sep='\n')     
         while True:
             line = f.readline()
             if not line:
-                print("文件末尾")
                 break
                 
             if "----- pid" in line:
@@ -62,9 +57,9 @@ def main():
                     # sorted(l,key=lambda t: t.cpu_duration)
                     l = sorted(l,key=lambda t: t.cpu_duration,reverse=True)
                     l = filter(lambda t: t.cpu_duration !=0, l)
-                    print('thread:>>>>>>>>>>>>')
+                    print('thread:')
                     print(*l,sep='\r\n')
-                    print('\n')
+                    
                     l = []
                 print(line.strip(),end='\n')
                 continue
@@ -105,14 +100,20 @@ def main():
         l = filter(lambda t: t.cpu_duration !=0, l)
         print('thread:>>>>>>>>>>>>')        
         print(*l,sep='\n')
-    print(appMainPid,appPkg)
+    print('event log','0'*100)
     with open(sys.argv[2],"r",encoding = 'utf-8') as f:
         while True:
             line = f.readline()
             if not line: break
             if (appPkg in line and  'activity_launch_time' in line) or 'am_anr' in line:
                 print(line.strip(),sep='\n')
-                
+    print('main log','0'*100)            
+    with open(sys.argv[3],"r",encoding = 'utf-8') as f:
+        while True:
+            line = f.readline()
+            if not line: break
+            if 'lowmemorykiller' in line or 'Background young' in line or 'IPCThreadState' in line:
+                print(line.strip(),sep='\n')
 
 if __name__=="__main__":
     main()
