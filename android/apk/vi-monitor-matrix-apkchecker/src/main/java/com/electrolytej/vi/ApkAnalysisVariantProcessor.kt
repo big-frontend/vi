@@ -2,6 +2,8 @@ package com.electrolytej.vi
 
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.api.BaseVariant
+import com.android.build.gradle.internal.publishing.AndroidArtifacts
+import com.android.builder.model.v2.ide.AndroidArtifact
 import com.didiglobal.booster.gradle.assembleTaskProvider
 import com.didiglobal.booster.gradle.packageBundleTaskProvider
 import com.didiglobal.booster.gradle.project
@@ -13,6 +15,7 @@ import com.google.auto.service.AutoService
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
+import org.gradle.api.artifacts.Dependency
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import org.json.JSONObject
@@ -21,15 +24,36 @@ import java.io.File
 @AutoService(VariantProcessor::class)
 class ApkAnalysisVariantProcessor : VariantProcessor {
     override fun process(variant: BaseVariant) {
-        val tp = variant.project.tasks.register("analyse${variant.name.capitalize()}ApkWithMatrix", ApkAnalyzerTask::class.java){
+        val tp0 = variant.project.tasks.register("analyse${variant.name.capitalize()}ApkWithMatrix", ApkAnalyzerTask::class.java){
             it.group = "booster"
             it.variant = variant
         }
-        tp.configure{
+        tp0.configure{
             it.dependsOn(variant.assembleTaskProvider)
+        }
+
+        val tp1 = variant.project.tasks.register("report${variant.name.capitalize()}ApkAnalyseResult", ApkReportTask::class.java){
+            it.group = "booster"
+            it.variant = variant
+        }
+
+        tp1.configure{
+            it.dependsOn(tp0)
         }
     }
 }
+abstract class ApkReportTask : DefaultTask() {
+    @get:Internal
+    lateinit var variant: BaseVariant
+    @TaskAction
+    fun report() {
+
+    }
+}
+
+/**
+ * 分析 整包 + 模块
+ */
 abstract class ApkAnalyzerTask : DefaultTask() {
     @get:Internal
     lateinit var variant: BaseVariant
@@ -71,6 +95,11 @@ abstract class ApkAnalyzerTask : DefaultTask() {
                 configPath
             )
         }
+
+
+        //        getResolvedArtifacts(variant,AndroidArtifacts.ConsumedConfigType.RUNTIME_CLASSPATH)
+//        variant.project.extensions.apk
+//        Dependency.APK
     }
     fun findApkAnalyzer() =
         Jar.getResourceAsFile("/matrix-apk-canary-2.0.8.jar", ApkAnalysisVariantProcessor::class.java)
