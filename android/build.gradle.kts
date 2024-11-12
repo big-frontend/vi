@@ -39,6 +39,8 @@ buildscript {
 //        classpath("com.didiglobal.booster:booster-task-check-snapshot:$booster_version")
 //        classpath("com.didiglobal.booster:booster-transform-usage:$booster_version")
 //        classpath("io.github.electrolytej:vi-transform-startup:1.0.0-SNAPSHOT")
+        //cpu trace
+        classpath("com.bytedance.btrace:rhea-gradle-plugin:2.0.3-rc02")
 
     }
 }

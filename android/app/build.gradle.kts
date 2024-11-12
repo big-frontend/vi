@@ -2,7 +2,16 @@ plugins {
     id("com.android.application")
     id("com.didiglobal.booster")
     id("org.jetbrains.kotlin.android")
+    id("com.bytedance.rhea-trace")
 }
+rheaTrace {
+    compilation {
+        traceFilterFilePath = "${project.rootDir}/trace-filter/traceFilter.txt"
+        needPackageWithMethodMap = true
+        applyMethodMappingFilePath = ""
+    }
+}
+
 //apply(from = "${rootDir}/apm_config.gradle")
 android {
     signingConfigs {
@@ -83,4 +92,5 @@ dependencies {
     implementation(project(":render:vi-monitor-render"))
     debugImplementation(project(":network:vi-tool-mitmproxy"))
     implementation(project(":network:vi-monitor-http"))
+    implementation("com.bytedance.btrace:rhea-core:2.0.3-rc02")
 }
