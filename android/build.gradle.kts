@@ -21,10 +21,10 @@ buildscript {
         val booster_version = "4.16.3"
         classpath("com.didiglobal.booster:booster-gradle-plugin:$booster_version")
         //包体积优化
-        classpath("com.didiglobal.booster:booster-task-compression-cwebp:$booster_version")
-        classpath("com.didiglobal.booster:booster-task-compression-processed-res:$booster_version")
-        classpath("com.didiglobal.booster:booster-transform-r-inline:$booster_version")
-        classpath("com.didiglobal.booster:booster-transform-br-inline:$booster_version")
+//        classpath("com.didiglobal.booster:booster-task-compression-cwebp:$booster_version")
+//        classpath("com.didiglobal.booster:booster-task-compression-processed-res:$booster_version")
+//        classpath("com.didiglobal.booster:booster-transform-r-inline:$booster_version")
+//        classpath("com.didiglobal.booster:booster-transform-br-inline:$booster_version")
 //        classpath("com.didiglobal.booster:booster-task-resource-deredundancy:$booster_version")
         //        classpath("io.github.electrolytej:vi-optimizer-minify-resource:1.0.0-SNAPSHOT")
 //        classpath("io.github.electrolytej:vi-optimizer-duplicated-resource:1.0.0-SNAPSHOT")
@@ -101,10 +101,4 @@ allprojects {
 //            freeCompilerArgs = listOf("-Xno-optimized-callable-references")
 //        }
 //    }
-}
-
-tasks.register("clean", Delete::class.java) {
-    description = "Remove all the build files and intermediate build outputs"
-//    delete(allprojects.map { it.buildDir })
-    delete(rootProject.buildDir)
 }

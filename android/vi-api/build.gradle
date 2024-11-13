@@ -7,6 +7,7 @@ publish {
     website = "https://github.com/big-frontend/vi"
 }
 apply from: "$rootDir/aar.gradle"
+apply plugin: "com.didiglobal.booster"
 android {
     namespace = "com.electrolytej.vi"
     ndkVersion = rootProject.NDK_VERSION
