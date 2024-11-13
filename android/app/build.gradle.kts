@@ -4,13 +4,13 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.bytedance.rhea-trace")
 }
-rheaTrace {
-    compilation {
-        traceFilterFilePath = "${project.rootDir}/trace-filter/traceFilter.txt"
-        needPackageWithMethodMap = true
-        applyMethodMappingFilePath = ""
-    }
-}
+//rheaTrace {
+//    compilation {
+//        traceFilterFilePath = "${rootDir}/traceFilter.txt"
+//        needPackageWithMethodMap = true
+//        applyMethodMappingFilePath = ""
+//    }
+//}
 
 //apply(from = "${rootDir}/apm_config.gradle")
 android {
@@ -72,6 +72,10 @@ android {
     buildFeatures {
         viewBinding = true
     }
+    packagingOptions {
+        resources.pickFirsts.add("com/electrolytej/vi/BuildConfig.class")
+        pickFirsts.add("com/electrolytej/vi/BuildConfig.class")
+    }
 }
 
 dependencies {
@@ -92,5 +96,6 @@ dependencies {
     implementation(project(":render:vi-monitor-render"))
     debugImplementation(project(":network:vi-tool-mitmproxy"))
     implementation(project(":network:vi-monitor-http"))
-    implementation("com.bytedance.btrace:rhea-core:2.0.3-rc02")
+//    implementation("com.bytedance.btrace:rhea-core:2.0.1")
+    implementation(project(":cpu-tracer:btrace:rhea-core"))
 }

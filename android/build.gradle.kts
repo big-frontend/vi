@@ -40,7 +40,7 @@ buildscript {
 //        classpath("com.didiglobal.booster:booster-transform-usage:$booster_version")
 //        classpath("io.github.electrolytej:vi-transform-startup:1.0.0-SNAPSHOT")
         //cpu trace
-        classpath("com.bytedance.btrace:rhea-gradle-plugin:2.0.3-rc02")
+//        classpath("com.bytedance.btrace:rhea-gradle-plugin:2.0.1")
 
     }
 }
@@ -55,6 +55,8 @@ plugins {
 //    id("org.jetbrains.kotlin.android") version "1.8.22" apply false
     id("io.johnsonlee.buildprops") version "1.2.0" apply false
     id("com.github.johnrengelman.shadow") version "6.1.0" apply false
+//    id("com.bytedance.rhea-trace") version "2.0.1" apply false
+    id("com.bytedance.rhea-trace") apply false
 }
 allprojects {
     repositories {

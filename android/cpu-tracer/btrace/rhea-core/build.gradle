@@ -1,0 +1,46 @@
+version "2.0.1"
+group "com.bytedance.btrace"
+apply from: "$rootDir/aar.gradle"
+android {
+    defaultConfig {
+        consumerProguardFiles "consumer-rules.pro"
+        externalNativeBuild {
+            cmake {
+                version '3.4.1'
+                // Sets optional flags for the C++ compiler.
+                cppFlags "-std=c++14"
+                //arguments /*'-DANDROID_STL=c++_shared',*/ '-DANDROID_ARM_MODE=arm'
+                arguments "-DBITS_HEADER_DIR=${project.projectDir.absolutePath+"/src/main/cpp/second_party/byte_hook"}"
+                arguments "-DBITS_SO_DIR=${project.projectDir.absolutePath+"/src/main/jniLibs"}"
+            }
+        }
+
+        ndk {
+            abiFilters "arm64-v8a", "armeabi-v7a"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+}
+
+dependencies {
+    implementation 'androidx.annotation:annotation:1.2.0'
+    implementation 'com.bytedance.android:shadowhook:1.0.2'
+    implementation "com.bytedance:bytehook:1.0.3"
+    compileOnly files('libs/dalvik.critical.jar')
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.core:core:1.3.2'
+    implementation 'org.nanohttpd:nanohttpd:2.2.0'
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN_VERSION}")
+}

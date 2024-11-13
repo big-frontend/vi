@@ -52,7 +52,7 @@ include(
     ":render:vi-monitor-render"
 )
 include(
-    ":stability:breakpad",
+//    ":stability:breakpad",
     ":stability:vi-monitor-bugly",
     ":stability:vi-monitor-anr",
 )
@@ -60,4 +60,12 @@ include(
     ":network:vi-tool-mitmproxy",
     ":network:vi-monitor-http"
 )
+include(
+    ":cpu-tracer:btrace:rhea-core",
+    ":cpu-tracer:btrace:rhea-trace-processor",
+//    ":cpu-tracer:btrace:rhea-gradle-plugin",
+)
 
+includeBuild(
+    "cpu-tracer/btrace"
+)
