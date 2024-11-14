@@ -55,7 +55,7 @@ class RheaTraceCompat {
                 RheaLog.i(TAG,"enableR8 is open , dont hook proguard task")
                 val transparentTransform = createTransparentTransform(appExtension, project, extension)
                 project.afterEvaluate {
-                    appExtension.applicationVariants.all { variant ->
+                    appExtension.applicationVariants.forEach { variant ->
                         transparentTransform.transparentMap[variant.name] = false
                     }
                 }
@@ -68,7 +68,7 @@ class RheaTraceCompat {
                 RheaLog.i(TAG,"dont hook proguard task")
                 val transparentTransform = createTransparentTransform(appExtension, project, extension)
                 project.afterEvaluate {
-                    appExtension.applicationVariants.all { variant ->
+                    appExtension.applicationVariants.forEach { variant ->
                         transparentTransform.transparentMap[variant.name] = false
                     }
                 }
@@ -78,7 +78,7 @@ class RheaTraceCompat {
                 val transparentTransform =
                     createTransparentTransform(appExtension, project, extension)
                 project.afterEvaluate {
-                    appExtension.applicationVariants.all { variant ->
+                    appExtension.applicationVariants.forEach { variant ->
                         transparentTransform.mappingFileMap[variant.name] = variant.mappingFile
                         if (variant.buildType.isMinifyEnabled) {
                             RheaTraceTasksManager.createRheaTraceTask(project, variant, extension)
@@ -117,7 +117,7 @@ class RheaTraceCompat {
         extension: RheaBuildExtension
     ) {
         project.afterEvaluate {
-            appExtension.applicationVariants.all {
+            appExtension.applicationVariants.forEach {
                 RheaTraceLegacyTransform.inject(
                     extension,
                     project,

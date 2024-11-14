@@ -1,19 +1,30 @@
 plugins {
+    `kotlin-dsl`
+    id("java")
+    alias(libs.plugins.kotlin.jvm) apply false
+//    id("io.johnsonlee.sonatype-publish-plugin")
     id("java-gradle-plugin")
-    kotlin("plugin.serialization") version "1.4.20"
+    id("com.gradle.plugin-publish") version "1.2.1"
 
 }
-repositories {
-    mavenLocal()
-    maven { url = uri("https://s01.oss.sonatype.org/content/repositories/public") }
-    maven { url = uri("https://maven.aliyun.com/repository/public/") } //central+jcenter
-    maven { url = uri("https://maven.aliyun.com/repository/google/") }
-    maven { url = uri("https://maven.aliyun.com/repository/gradle-plugin") }
-//        maven { url = uri("https://maven.oschina.net/content/groups/public/") }
-    maven { url = uri("https://jitpack.io") }
-    mavenCentral()
-    google()
-    gradlePluginPortal()
+tasks.withType<JavaCompile> {
+    sourceCompatibility = JavaVersion.VERSION_11.majorVersion
+    targetCompatibility = JavaVersion.VERSION_11.majorVersion
+}
+tasks.withType<Test>().configureEach {
+    testLogging {
+        exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+        showExceptions = true
+        showCauses = true
+        showStackTraces = true
+    }
+}
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_11.majorVersion
+        apiVersion = "1.5"
+        freeCompilerArgs = listOf("-Xno-optimized-callable-references")
+    }
 }
 version = "2.0.1"
 group = "com.bytedance"
@@ -28,13 +39,15 @@ gradlePlugin {
     }
 }
 dependencies {
-    val AGP_VERSION = "7.4.1"
-    val KOTLIN_VERSION = "1.8.22"
     val  asm_version="6.2.1"
     compileOnly(gradleApi())
-    compileOnly("com.android.tools.build:gradle:${AGP_VERSION}")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:${KOTLIN_VERSION}")
-    implementation("org.ow2.asm:asm:$asm_version")
+    compileOnly(libs.android.gradlePlugin)
+    compileOnly(libs.android.tools.common)
+    compileOnly(libs.android.tools.builder)
+    compileOnly(libs.kotlin.stdlib)
+    implementation("org.ow2.asm:asm:${asm_version}")
+    implementation("org.ow2.asm:asm-commons:$asm_version")
     implementation("org.ow2.asm:asm-tree:$asm_version")
     implementation("org.ow2.asm:asm-util:$asm_version")
+    implementation("org.apache.httpcomponents.client5:httpclient5:5.1.3")
 }

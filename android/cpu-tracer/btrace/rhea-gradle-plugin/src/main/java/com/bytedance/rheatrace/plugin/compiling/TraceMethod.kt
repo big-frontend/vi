@@ -37,7 +37,6 @@ package com.bytedance.rheatrace.plugin.compiling
 import com.bytedance.rheatrace.common.retrace.MappingCollector
 import com.bytedance.rheatrace.common.utils.JavaToClassFormat.getMethodDescParams
 import com.bytedance.rheatrace.common.utils.JavaToClassFormat.getMethodDescReturn
-import org.apache.http.util.TextUtils
 import org.objectweb.asm.Opcodes
 import org.objectweb.asm.Type
 
@@ -124,7 +123,7 @@ open class TraceMethod {
     }
 
     fun getReturnType(): String? {
-        return if (TextUtils.isEmpty(desc)) {
+        return if (desc.isNullOrEmpty()) {
             null
         } else Type.getReturnType(desc).toString()
     }

@@ -47,9 +47,12 @@ buildscript {
 plugins {
     id("com.android.application") version "7.4.1" apply false
     id("com.android.library") version "7.4.1" apply false
-    kotlin("android") version "1.8.22" apply false
-    kotlin("kapt") version "1.8.22" apply false
-    kotlin("jvm") version "1.8.22" apply false
+//    kotlin("android") version "1.8.22" apply false
+//    kotlin("kapt") version "1.8.22" apply false
+//    kotlin("jvm") version "1.8.22" apply false
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.kotlin.serialization) apply false
+    alias(libs.plugins.kotlin.android) apply false
     id("io.johnsonlee.sonatype-publish-plugin") version "1.7.0" apply false
 //    id("org.jetbrains.kotlin.jvm") version "1.8.22" apply false
 //    id("org.jetbrains.kotlin.android") version "1.8.22" apply false

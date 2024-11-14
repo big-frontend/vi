@@ -37,7 +37,6 @@ package com.bytedance.rheatrace.plugin.transform
 import com.android.build.api.transform.Format
 import com.android.build.api.transform.Status
 import com.android.build.api.transform.TransformInvocation
-import com.android.utils.FileUtils
 import com.bytedance.rheatrace.common.utils.RheaLog
 import com.bytedance.rheatrace.plugin.compiling.TraceWeaver
 import com.bytedance.rheatrace.plugin.extension.RheaBuildExtension
@@ -96,7 +95,7 @@ class RheaTraceTransform(
                         Status.ADDED, Status.CHANGED -> {
                             copyFileAndMkdirsAsNeed(inputJar, outputJar)
                         }
-                        Status.REMOVED -> FileUtils.delete(outputJar)
+                        Status.REMOVED -> outputJar.delete()
                         else -> {
                             //do nothing
                         }
@@ -127,7 +126,7 @@ class RheaTraceTransform(
                             }
                             Status.REMOVED -> {
                                 val outputFile = toOutputFile(outputDir, inputDir, inputFile)
-                                FileUtils.deleteIfExists(outputFile)
+                                outputFile.deleteOnExit()
                             }
                             else -> {
                                 //do nothing.
@@ -135,7 +134,7 @@ class RheaTraceTransform(
                         }
                     }
                 } else {
-                    for (inputFile in FileUtils.getAllFiles(inputDir)) {
+                    inputDir.listFiles()?.forEach {inputFile ->
                         val out = toOutputFile(outputDir, inputDir, inputFile)
                         copyFileAndMkdirsAsNeed(inputFile, out)
                     }
@@ -217,11 +216,12 @@ class RheaTraceTransform(
     private fun copyFileAndMkdirsAsNeed(from: File, to: File) {
         if (from.exists()) {
             to.parentFile.mkdirs()
-            FileUtils.copyFile(from, to)
+            from.copyTo(to)
         }
     }
 
     private fun toOutputFile(outputDir: File, inputDir: File, inputFile: File): File {
-        return File(outputDir, FileUtils.relativePossiblyNonExistingPath(inputFile, inputDir))
+//        return File(outputDir, FileUtils.relativePossiblyNonExistingPath(inputFile, inputDir))
+        return File(outputDir, inputFile.toRelativeString(inputDir))
     }
 }

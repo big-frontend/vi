@@ -4,13 +4,13 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("com.bytedance.rhea-trace")
 }
-//rheaTrace {
-//    compilation {
-//        traceFilterFilePath = "${rootDir}/traceFilter.txt"
-//        needPackageWithMethodMap = true
-//        applyMethodMappingFilePath = ""
-//    }
-//}
+rheaTrace {
+    compilation {
+        traceFilterFilePath = "${rootDir}/traceFilter.txt"
+        needPackageWithMethodMap = true
+        applyMethodMappingFilePath = ""
+    }
+}
 
 //apply(from = "${rootDir}/apm_config.gradle")
 android {

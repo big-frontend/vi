@@ -44,12 +44,12 @@ object CopyMappingTask {
         val assetsDir = project.layout.buildDirectory.dir("generated/rhea_assets/")
         android.sourceSets.getByName("main").assets.srcDir(assetsDir)
         RheaLog.i(TAG, "add assets dir: ${assetsDir.get().asFile}")
-        android.applicationVariants.configureEach { variant ->
+        android.applicationVariants.forEach { variant ->
             RheaLog.i(TAG, "variant: ${variant.name}")
             //Add methodMapping to determine whether packing is required
             if (extension.compilation?.needPackageWithMethodMap == false) {
                 RheaLog.i(TAG, "needPackageWithMethodMap = false ,registerTaskSaveMappingToAssets failed")
-                return@configureEach
+                return@forEach
             }
             // copy mapping into assets
             RheaLog.i(TAG, "hookAssetsTask work")
@@ -101,7 +101,7 @@ object CopyMappingTask {
 
     private fun getCopyMappingTask(variant: ApplicationVariant, project: Project, assetsDir: Provider<Directory>): Task {
         return project.tasks.register("copyRhea${variant.name.capitalize()}Mapping") {
-            it.actions.add(Action {
+            actions.add(Action {
                 assetsDir.get().asFile.mkdirs()
                 val input = File(getMethodMapFilePath(project, variant.name))
                 input.copyTo(File(assetsDir.get().asFile, MethodMappingFileName), true)

@@ -37,7 +37,7 @@ object RheaFileUtils {
 
     private fun getRheaOutDir(project: Project, variantName: String): String {
         return Joiner.on(File.separatorChar).join(
-            project.buildDir.absolutePath, AndroidProject.FD_OUTPUTS, "rhea", variantName
+            project.buildDir.absolutePath, "outputs", "rhea", variantName
         )
     }
 

@@ -105,7 +105,7 @@ abstract class RheaBaseTransform(
         val mappingOutput = if (mappingFileDir == null) {
             Joiner.on(File.separatorChar).join(
                 project.buildDir.absolutePath,
-                AndroidProject.FD_OUTPUTS,
+                "outputs",
                 "mapping",
                 variantName
             )
@@ -116,7 +116,7 @@ abstract class RheaBaseTransform(
         val traceClassOutputDir = Joiner.on(File.separatorChar).join(
             project.buildDir.absolutePath,
             RheaConstants.RHEA_TRACE_ROOT,
-            AndroidProject.FD_OUTPUTS,
+            "outputs",
             RheaConstants.TRACE_CLASS_DIR,
             variantName
         )

@@ -71,9 +71,7 @@ object RheaTraceTasksManager {
 
         try {
             val dexBuilderProvider = project.tasks.named(dexBuilderTaskName)
-            dexBuilderProvider.configure { task: Task ->
-                traceTaskProvider.get().wired(task as DexArchiveBuilderTask)
-            }
+            traceTaskProvider.get().wired(dexBuilderProvider.get() as DexArchiveBuilderTask)
         } catch (e: Throwable) {
             RheaLog.e(
                 TAG,

@@ -67,5 +67,5 @@ include(
 )
 
 includeBuild(
-    "cpu-tracer/btrace"
+    "cpu-tracer/btrace/rhea-gradle-plugin"
 )
