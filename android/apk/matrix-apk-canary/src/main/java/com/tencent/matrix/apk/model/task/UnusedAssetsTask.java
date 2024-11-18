@@ -200,10 +200,13 @@ public class UnusedAssetsTask extends ApkTask {
             Log.i(TAG, "find reference assets count: %d", assetRefSet.size());
             assetsPathSet.removeAll(assetRefSet);
             JsonArray jsonArray = new JsonArray();
+            long maxReduceSize = 0;
             for (String name : assetsPathSet) {
                 jsonArray.add(name);
+                maxReduceSize += new File(assetDir.getAbsolutePath(), name).length()
             }
             ((TaskJsonResult) taskResult).add("unused-assets", jsonArray);
+            ((TaskJsonResult) taskResult).add("max-reduce-size", maxReduceSize);
             taskResult.setStartTime(startTime);
             taskResult.setEndTime(System.currentTimeMillis());
             return taskResult;
