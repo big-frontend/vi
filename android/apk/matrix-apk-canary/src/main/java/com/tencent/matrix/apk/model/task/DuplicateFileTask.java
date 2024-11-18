@@ -140,12 +140,13 @@ public class DuplicateFileTask extends ApkTask {
                     }
                 }
             });
-
+            long  maxReduceSize = 0;
             for (Pair<String, Long> entry : fileSizeList) {
                 if (md5Map.get(entry.getFirst()).size() > 1) {
                     JsonObject jsonObject = new JsonObject();
                     jsonObject.addProperty("md5", entry.getFirst());
                     jsonObject.addProperty("size", entry.getSecond());
+                    maxReduceSize += entry.getSecond();
                     JsonArray jsonFiles = new JsonArray();
                     for (String filename : md5Map.get(entry.getFirst())) {
                         jsonFiles.add(filename);
@@ -155,6 +156,7 @@ public class DuplicateFileTask extends ApkTask {
                 }
             }
             ((TaskJsonResult) taskResult).add("files", jsonArray);
+            ((TaskJsonResult) taskResult).add("max-reduce-size", maxReduceSize);
             taskResult.setStartTime(startTime);
             taskResult.setEndTime(System.currentTimeMillis());
         } catch (Exception e) {
