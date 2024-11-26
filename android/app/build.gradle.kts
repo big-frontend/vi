@@ -98,4 +98,6 @@ dependencies {
     implementation(project(":network:vi-monitor-http"))
 //    implementation("com.bytedance.btrace:rhea-core:2.0.1")
     implementation(project(":cpu-tracer:btrace:rhea-core"))
+    implementation(project(":modules:aModule"))
+    implementation(project(":modules:bModule"))
 }

@@ -69,3 +69,5 @@ include(
 includeBuild(
     "cpu-tracer/btrace/rhea-gradle-plugin"
 )
+include(":modules:aModule")
+include(":modules:bModule")
