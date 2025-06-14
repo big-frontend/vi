@@ -15,7 +15,7 @@ plugins {
 
 android {
     compileSdk = 34
-    namespace = "com.electrolytej.network"
+    namespace = "com.electrolytej.tool.network"
 //    compileSdkVersion = COMPILE_SDK_VERSION
 //    buildToolsVersion = BUILD_TOOLS_VERSION
 

@@ -17,6 +17,7 @@ class VApp : Application() {
         super.attachBaseContext(base)
         appDelegate.attachBaseContext(base)
         Perf.attachBaseContext(this)
+        xcrash.XCrash.init(this);
     }
 
     override fun onCreate() {

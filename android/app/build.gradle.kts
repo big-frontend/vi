@@ -14,6 +14,7 @@ rheaTrace {
 
 //apply(from = "${rootDir}/apm_config.gradle")
 android {
+
     signingConfigs {
         create("release") {
             storeFile = file("${rootDir}/key.jks")
@@ -30,22 +31,25 @@ android {
     }
     namespace = "com.electrolytej.vi"
     compileSdk = 34
-    buildToolsVersion ="30.0.2"
-    val NDK_VERSION:String by project
+    val NDK_VERSION: String by project
     ndkVersion = NDK_VERSION
     defaultConfig {
         applicationId = "com.electrolytej.vi"
         minSdk = 21
-        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         signingConfig = signingConfigs.getByName("release")
+        externalNativeBuild {
+            cmake {
+                abiFilters += setOf("arm64-v8a", "armeabi-v7a")
+            }
+        }
     }
 
     buildTypes {
-        debug{
+        debug {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -75,6 +79,14 @@ android {
     packagingOptions {
         resources.pickFirsts.add("com/electrolytej/vi/BuildConfig.class")
         pickFirsts.add("com/electrolytej/vi/BuildConfig.class")
+        pickFirst("lib/armeabi-v7a/libc++_shared.so")
+        pickFirst("lib/arm64-v8a/libc++_shared.so")
+        pickFirst("lib/armeabi-v7a/libwechatbacktrace.so")
+        pickFirst("lib/arm64-v8a/libwechatbacktrace.so")
+        pickFirst("lib/armeabi-v7a/libfbjni.so")
+        pickFirst("lib/arm64-v8a/libfbjni.so")
+        pickFirst("lib/armeabi-v7a/libbytehook.so")
+        pickFirst("lib/arm64-v8a/libbytehook.so")
     }
 }
 
@@ -100,4 +112,5 @@ dependencies {
     implementation(project(":cpu-tracer:btrace:rhea-core"))
     implementation(project(":modules:aModule"))
     implementation(project(":modules:bModule"))
+    implementation("com.iqiyi.xcrash:xcrash-android-lib:3.0.0")
 }

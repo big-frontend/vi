@@ -30,7 +30,7 @@ buildscript {
 //        classpath("io.github.electrolytej:vi-optimizer-duplicated-resource:1.0.0-SNAPSHOT")
 //        classpath("io.github.electrolytej:vi-optimizer-unused-resource:1.0.0-SNAPSHOT")
 //        classpath("io.github.electrolytej:vi-optimizer-obfuscated-resource:1.0.0-SNAPSHOT")
-        classpath("io.github.electrolytej:vi-monitor-matrix-apkchecker:1.0.0-SNAPSHOT")
+//        classpath("io.github.electrolytej:vi-monitor-matrix-apkchecker:1.0.0-SNAPSHOT")
 
 //        classpath("com.didiglobal.booster:booster-task-analyser:$booster_version")
 //            classpath("com.didiglobal.booster:booster-transform-usage:$booster_version")
