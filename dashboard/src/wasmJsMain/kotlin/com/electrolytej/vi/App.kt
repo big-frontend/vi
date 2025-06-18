@@ -1,4 +1,4 @@
-package com.electrolytej.vi.vi
+package com.electrolytej.vi
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image

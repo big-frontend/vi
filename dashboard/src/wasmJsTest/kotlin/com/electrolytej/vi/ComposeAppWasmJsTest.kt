@@ -1,4 +1,4 @@
-package com.electrolytej.vi.vi
+package com.electrolytej.vi
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

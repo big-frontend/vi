@@ -1,4 +1,4 @@
-package com.electrolytej.vi.vi
+package com.electrolytej.vi
 
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.window.ComposeViewport
