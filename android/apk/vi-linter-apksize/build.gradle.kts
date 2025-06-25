@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.electrolytej.vi"
+    namespace = "com.electrolytej.vi.linter"
     compileSdk = 34
 
     defaultConfig {

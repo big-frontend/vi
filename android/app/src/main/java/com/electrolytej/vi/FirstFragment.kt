@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.electrolytej.vi.R
-import com.electrolytej.vi.databinding.FragmentFirstBinding
+import com.electrolytej.vi.app.R
+import com.electrolytej.vi.app.databinding.FragmentFirstBinding
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.

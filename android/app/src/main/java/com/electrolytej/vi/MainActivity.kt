@@ -11,8 +11,8 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import androidx.core.view.drawToBitmap
-import com.electrolytej.vi.R
-import com.electrolytej.vi.databinding.ActivityMainBinding
+import com.electrolytej.vi.app.R
+import com.electrolytej.vi.app.databinding.ActivityMainBinding
 import xcrash.XCrash
 
 class MainActivity : AppCompatActivity() {

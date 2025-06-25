@@ -29,7 +29,7 @@ android {
             keyPassword = "123456"
         }
     }
-    namespace = "com.electrolytej.vi"
+    namespace = "com.electrolytej.vi.app"
     compileSdk = 34
     val NDK_VERSION: String by project
     ndkVersion = NDK_VERSION

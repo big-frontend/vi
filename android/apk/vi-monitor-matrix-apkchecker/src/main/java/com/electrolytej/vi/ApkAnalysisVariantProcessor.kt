@@ -4,6 +4,7 @@ import com.android.build.api.variant.DynamicFeatureVariant
 import com.android.build.api.variant.LibraryVariant
 import com.android.build.gradle.BaseExtension
 import com.android.build.gradle.api.BaseVariant
+import com.android.build.gradle.internal.dsl.AbstractPublishing
 import com.android.build.gradle.internal.publishing.AndroidArtifacts
 import com.android.build.gradle.internal.tasks.factory.dependsOn
 import com.android.builder.model.v2.ide.AndroidArtifact
@@ -12,6 +13,8 @@ import com.didiglobal.booster.gradle.aar
 import com.didiglobal.booster.gradle.allArtifacts
 import com.didiglobal.booster.gradle.assembleTaskProvider
 import com.didiglobal.booster.gradle.dependencies
+import com.didiglobal.booster.gradle.getArtifactCollection
+import com.didiglobal.booster.gradle.getArtifactFileCollection
 import com.didiglobal.booster.gradle.getResolvedArtifactResults
 import com.didiglobal.booster.gradle.gradleVersion
 import com.didiglobal.booster.gradle.mergeJavaResourceTaskProvider
@@ -25,11 +28,14 @@ import com.didiglobal.booster.kotlinx.file
 import com.didiglobal.booster.kotlinx.ifNotEmpty
 import com.didiglobal.booster.kotlinx.matches
 import com.didiglobal.booster.task.spi.VariantProcessor
+import com.didiglobal.booster.transform.ArtifactManager
+import com.didiglobal.booster.transform.artifacts
 import com.google.auto.service.AutoService
 import org.apache.tools.ant.taskdefs.condition.Os
 import org.gradle.api.DefaultTask
 import org.gradle.api.Project
 import org.gradle.api.UnknownTaskException
+import org.gradle.api.internal.component.ArtifactType
 import org.gradle.api.tasks.Internal
 import org.gradle.api.tasks.TaskAction
 import org.gradle.configurationcache.extensions.capitalized
@@ -85,7 +91,6 @@ class ApkAnalysisVariantProcessor : VariantProcessor {
             }.also {
                 listModules.dependsOn(it)
             }
-
         }
 
     }
@@ -97,44 +102,49 @@ internal open class ListModules : DefaultTask() {
 
     @TaskAction
     fun list() {
-        val resolvedArtifactResults = variant.project.getResolvedArtifactResults(variant= variant)
+        val a = getResolvedArtifacts(variant)
+        val resolvedArtifactResults = variant.project.getResolvedArtifactResults(variant = variant)
         resolvedArtifactResults.forEachIndexed { i, r ->
-            println("cjf$i ---> ${r.id.componentIdentifier.displayName} ---> ${r.type} ---> ${r.file} ---> ${r.variant}")
+//            println("cjf$i ---> ${r.id.componentIdentifier.displayName} ---> ${r.type} ---> ${r.file} ---> ${r.variant}")
         }
-        println("")
-        variant.dependencies.forEachIndexed { i, result ->
-            println("$i ${result.file.absolutePath}")
-            if (result.file.exists()){
-                when (result.file.extension.lowercase()) {
-                    "aar", "jar" -> {
-                        JarFile(result.file).use { jar ->
-                            jar.entries().asSequence().filter {
-                                it.name.endsWith(".so")
-                            }.sortedBy {
-                                it.name
-                            }.toList().ifNotEmpty { libs ->
-                                println(
-                                    "$CSI_CYAN${result.id.componentIdentifier}$CSI_RESET\n${
-                                        libs.joinToString("\n") {
-                                            "  - ${it.name}"
-                                        }
-                                    }"
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-            }
+//        variant.dependencies.forEachIndexed { i, result ->
+//            println("$i ${result.file.absolutePath}")
+//            if (result.file.exists()) {
+//                when (result.file.extension.lowercase()) {
+//                    "aar", "jar" -> {
+//                        JarFile(result.file).use { jar ->
+//                            jar.entries().asSequence().filter {
+//                                it.name.endsWith(".so")
+//                            }.sortedBy {
+//                                it.name
+//                            }.toList().ifNotEmpty { libs ->
+//                                println(
+//                                    "$CSI_CYAN${result.id.componentIdentifier}$CSI_RESET\n${
+//                                        libs.joinToString("\n") {
+//                                            "  - ${it.name}"
+//                                        }
+//                                    }"
+//                                )
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
         val artifacts = this.variant.allArtifacts
         val maxTypeWidth: Int = artifacts.keys.map { it.length }.maxOrNull()!!
+//        println("${maxTypeWidth}")
 //        artifacts.forEach { (type, files) ->
-//            println("${".".repeat(maxTypeWidth - type.length + 1)}$type : ${try {
-//                files.files
-//            } catch (e: Throwable) {
-//                emptyList<File>()
-//            }}")
+//            println(
+//                "${".".repeat(maxTypeWidth - type.length + 1)}$type : ${
+//                    try {
+//                        files.files
+//                    } catch (e: Throwable) {
+//                        emptyList<File>()
+//                    }
+//                }"
+//            )
 //        }
     }
 }
@@ -158,6 +168,7 @@ abstract class ApkAnalyzerTask : DefaultTask() {
 
     @TaskAction
     fun analyze() {
+//        val a = getResolvedArtifacts(variant)
         val configPath = "${project.rootDir}/apk-checker-config.json"
         val mappingFile = variant.mappingFileProvider?.get()?.singleFile
         val f = project.file(configPath)
@@ -202,11 +213,6 @@ abstract class ApkAnalyzerTask : DefaultTask() {
                 configPath
             )
         }
-
-
-        //        getResolvedArtifacts(variant,AndroidArtifacts.ConsumedConfigType.RUNTIME_CLASSPATH)
-//        variant.project.extensions.apk
-//        Dependency.APK
     }
 
     fun findApkAnalyzer() =
