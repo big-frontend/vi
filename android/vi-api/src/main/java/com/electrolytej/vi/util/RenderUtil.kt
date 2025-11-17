@@ -14,7 +14,11 @@ import android.view.ViewTreeObserver
  */
 fun Activity.firstRender(onFirstRenderStart: (ts: Long) -> Unit,onFirstRenderEnd: (ts: Long) -> Unit) {
     val start = System.currentTimeMillis()
-    window.decorView.post { onFirstRenderEnd(System.currentTimeMillis() - start) }
+    onFirstRenderStart(start)
+    window.decorView.post {
+        val end = System.currentTimeMillis()
+        onFirstRenderEnd(end - start)
+    }
 }
 
 /**

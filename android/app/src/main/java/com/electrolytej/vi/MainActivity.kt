@@ -11,8 +11,11 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import android.view.Menu
 import android.view.MenuItem
 import androidx.core.view.drawToBitmap
+import com.electrolytej.render.TAG_FRAME_MONITOR
 import com.electrolytej.vi.app.R
 import com.electrolytej.vi.app.databinding.ActivityMainBinding
+import com.electrolytej.vi.util.TraceUtil
+import com.electrolytej.vi.util.firstRender
 import xcrash.XCrash
 
 class MainActivity : AppCompatActivity() {
@@ -40,6 +43,12 @@ class MainActivity : AppCompatActivity() {
 
             XCrash.testJavaCrash(false)
         }
+        firstRender(onFirstRenderStart = {
+        }, onFirstRenderEnd = {
+            TraceUtil.i(TAG_FRAME_MONITOR, "MainActivity#firstRender");
+            TraceUtil.o()
+
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
