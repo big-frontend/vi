@@ -37,6 +37,7 @@ public class ApkConstants {
     public static final String DEFAULT_MAPPING_FILENAME = "mapping.txt";
     public static final String DEFAULT_RTXT_FILENAME = "R.txt";
     public static final String DEFAULT_RESGUARD_MAPPING_FILENAME = "resguard-mapping.txt";
+    public static final String DEFAULT_RESOLVED_ARTIFACTS_FILENAME = "resolved-artifacts.txt";
     public static final int K1024 = 1024;
 
 }

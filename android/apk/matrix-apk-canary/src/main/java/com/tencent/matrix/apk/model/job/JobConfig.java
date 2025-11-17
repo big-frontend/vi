@@ -19,9 +19,11 @@ package com.tencent.matrix.apk.model.job;
 import com.google.gson.JsonArray;
 
 import com.android.utils.Pair;
+import com.google.gson.JsonObject;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by jinqiuchen on 17/6/15.
@@ -35,11 +37,13 @@ public final class JobConfig {
     private String outputPath;
     private String mappingFilePath;
     private String resMappingFilePath;
+    private String resolvedArtifactsFilePath;
     private JsonArray outputConfig;
 
     private List<String> outputFormatList;
     private Map<String, String> proguardClassMap;
     private Map<String, String> resguardMap;
+    private Map<String, Set<String>> resolvedArtifactsMap;
     private Map<String, Pair<Long, Long>> entrySizeMap;
     private Map<String, String> entryNameMap;
 
@@ -99,6 +103,13 @@ public final class JobConfig {
         this.resMappingFilePath = resMappingFilePath;
     }
 
+    public String getResolvedArtifactsFilePath() {
+        return resolvedArtifactsFilePath;
+    }
+    public void setResolvedArtifactsFilePath(String filePath) {
+        this.resolvedArtifactsFilePath = filePath;
+    }
+
     public Map<String, String> getProguardClassMap() {
         return proguardClassMap;
     }
@@ -115,6 +126,19 @@ public final class JobConfig {
         this.resguardMap = resguardMap;
     }
 
+
+    public Set<String> getResByModule(String module) {
+        if (resolvedArtifactsMap == null || resolvedArtifactsMap.isEmpty()) {
+            return null;
+        }
+        return resolvedArtifactsMap.get(module);
+    }
+    public Map<String, Set<String>> getResolvedArtifactsMap() {
+        return resolvedArtifactsMap;
+    }
+    public void setResolvedArtifactsMap(Map<String, Set<String>> resolvedArtifactsMap) {
+        this.resolvedArtifactsMap = resolvedArtifactsMap;
+    }
     public Map<String, Pair<Long, Long>> getEntrySizeMap() {
         return entrySizeMap;
     }

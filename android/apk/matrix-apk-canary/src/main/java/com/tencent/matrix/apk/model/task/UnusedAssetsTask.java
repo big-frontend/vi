@@ -19,6 +19,7 @@ package com.tencent.matrix.apk.model.task;
 
 import com.google.common.collect.Ordering;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.tencent.matrix.apk.model.exception.TaskExecuteException;
 import com.tencent.matrix.apk.model.exception.TaskInitException;
 import com.tencent.matrix.apk.model.job.JobConfig;
@@ -28,6 +29,7 @@ import com.tencent.matrix.apk.model.result.TaskResult;
 import com.tencent.matrix.apk.model.result.TaskResultFactory;
 import com.tencent.matrix.apk.model.task.util.ApkConstants;
 import com.tencent.matrix.apk.model.task.util.ApkUtil;
+import com.tencent.matrix.apk.model.task.util.JSONUtil;
 import com.tencent.matrix.javalib.util.Log;
 import com.tencent.matrix.javalib.util.Util;
 import org.jf.baksmali.BaksmaliOptions;
@@ -200,11 +202,13 @@ public class UnusedAssetsTask extends ApkTask {
             Log.i(TAG, "find reference assets count: %d", assetRefSet.size());
             assetsPathSet.removeAll(assetRefSet);
             JsonArray jsonArray = new JsonArray();
+            JsonObject jsonObject = new JsonObject();
             long maxReduceSize = 0;
             for (String name : assetsPathSet) {
-                jsonArray.add(name);
-                maxReduceSize += new File(assetDir.getAbsolutePath(), name).length()
+                JSONUtil.addAssets(config, jsonObject, name);
+                maxReduceSize += new File(assetDir.getAbsolutePath(), name).length();
             }
+            jsonArray.add(jsonObject);
             ((TaskJsonResult) taskResult).add("unused-assets", jsonArray);
             ((TaskJsonResult) taskResult).add("max-reduce-size", maxReduceSize);
             taskResult.setStartTime(startTime);

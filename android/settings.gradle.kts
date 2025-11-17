@@ -35,6 +35,7 @@ include(
     ":apk:matrix-apk-canary",
     ":apk:matrix-arscutil",
     ":apk:matrix-commons",
+    ":apk:vi-apk-commons",
     ":apk:vi-monitor-matrix-apkchecker",
     ":apk:vi-optimizer-minify-resource",
     ":apk:vi-optimizer-duplicated-resource",

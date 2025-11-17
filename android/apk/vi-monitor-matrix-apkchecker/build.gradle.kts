@@ -14,6 +14,16 @@ java {
 }
 val AGP_VERSION :String by project
 val KOTLIN_VERSION :String by project
+sourceSets {
+    getByName("main") {
+        java {
+            srcDirs("../vi-apk-commons/src/main/java/")
+        }
+        resources {
+            srcDirs("../vi-apk-commons/src/main/resources/")
+        }
+    }
+}
 dependencies{
     kapt("com.google.auto.service:auto-service:1.0")
     implementation("com.didiglobal.booster:booster-api:4.16.3")

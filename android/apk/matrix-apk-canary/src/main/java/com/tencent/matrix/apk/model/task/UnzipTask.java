@@ -38,9 +38,11 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import static com.tencent.matrix.apk.model.result.TaskResultFactory.TASK_RESULT_TYPE_JSON;
@@ -59,8 +61,10 @@ public class UnzipTask extends ApkTask {
     private File outputFile;
     private File mappingTxt;
     private File resMappingTxt;
+    private File resolvedArtifactsFilePath;
     private final Map<String, String> proguardClassMap;
     private final Map<String, String> resguardMap;
+    private final Map<String, Set<String>> resolvedArtifactsMap;
     private final Map<String, String> resDirMap;
     private final Map<String, String> entryNameMap;
     private final Map<String, Pair<Long, Long>> entrySizeMap;
@@ -70,6 +74,7 @@ public class UnzipTask extends ApkTask {
         type = TASK_TYPE_UNZIP;
         proguardClassMap = new HashMap<>();
         resguardMap = new HashMap<>();
+        resolvedArtifactsMap = new HashMap<>();
         resDirMap = new HashMap<>();
         entryNameMap = new HashMap<>();
         entrySizeMap = new HashMap<>();
@@ -103,6 +108,13 @@ public class UnzipTask extends ApkTask {
             resMappingTxt = new File(config.getResMappingFilePath());
             if (!FileUtil.isLegalFile(resMappingTxt)) {
                 throw new TaskInitException(TAG + "---resguard mapping file " + config.getResMappingFilePath() + " is not legal!");
+            }
+        }
+
+        if (!Util.isNullOrNil(config.getResolvedArtifactsFilePath())) {
+            resolvedArtifactsFilePath = new File(config.getResolvedArtifactsFilePath());
+            if (!FileUtil.isLegalFile(resolvedArtifactsFilePath)) {
+                throw new TaskInitException(TAG + "---resolved artifacts file " + config.getResolvedArtifactsFilePath() + " is not legal!");
             }
         }
     }
@@ -143,7 +155,6 @@ public class UnzipTask extends ApkTask {
         }
         return "";
     }
-
 
     private void readResMappingTxtFile() throws IOException {
         if (resMappingTxt != null) {
@@ -187,6 +198,35 @@ public class UnzipTask extends ApkTask {
         }
     }
 
+    private void readResolvedArtifactsTxtFile() throws IOException {
+        if (resolvedArtifactsFilePath != null) {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(resolvedArtifactsFilePath));
+            try {
+                String line = bufferedReader.readLine();
+                String moduleName = "";
+                while (line != null) {
+                    if (line.trim().endsWith("收集")) {
+                        moduleName = line.trim().split(" ")[0];
+                    } else if (line.trim().startsWith("*")) {
+                        String path = line.trim().split(" ")[1];
+
+                        Set<String> paths = resolvedArtifactsMap.get(moduleName);
+                        if (!Util.isNullOrNil(moduleName) && !Util.isNullOrNil(path)) {
+                            Log.d(TAG, "%s->%s", moduleName, path);
+                            if (paths == null) {
+                                paths = new java.util.HashSet<>();
+                            }
+                            paths.add(path.trim());
+                            resolvedArtifactsMap.put(moduleName, paths);
+                        }
+                    }
+                    line = bufferedReader.readLine();
+                }
+            } finally {
+                bufferedReader.close();
+            }
+        }
+    }
     private String parseResourceNameFromPath(String dir, String filename) {
         if (Util.isNullOrNil(dir) || Util.isNullOrNil(filename)) {
             return "";
@@ -312,6 +352,8 @@ public class UnzipTask extends ApkTask {
             config.setProguardClassMap(proguardClassMap);
             readResMappingTxtFile();
             config.setResguardMap(resguardMap);
+            readResolvedArtifactsTxtFile();
+            config.setResolvedArtifactsMap(resolvedArtifactsMap);
 
             Enumeration entries = zipFile.entries();
             JsonArray jsonArray = new JsonArray();

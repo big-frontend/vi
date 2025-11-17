@@ -63,9 +63,14 @@ public class MMTaskJsonResult extends TaskJsonResult {
             case TaskFactory.TASK_TYPE_COUNT_METHOD:
                 formatMethodCountTask(jsonObjectInput, config);
                 break;
-            case TaskFactory.TASK_TYPE_COUNT_R_CLASS:
-                formatCountR(jsonObjectInput);
+            case TaskFactory.TASK_TYPE_DUPLICATE_FILE:
+                formatDuplicateFileTask(jsonObjectInput,config);
                 break;
+//            case TaskFactory.TASK_TYPE_UNUSED_ASSETS:
+//                formatUnusedAssetsTask(jsonObjectInput,config);
+//                break;
+//            case TaskFactory.TASK_TYPE_UNUSED_RESOURCES:
+//                break;
             /*case TaskFactory.TASK_TYPE_UNUSED_RESOURCES:
                 formatUnusedResourcesTask(jsonObjectInput);
                 break;*/
@@ -422,7 +427,36 @@ public class MMTaskJsonResult extends TaskJsonResult {
         jsonObject.add("groups", groupArray);
     }
 
+    private static void formatDuplicateFileTask(JsonObject jsonObject, JsonObject config) {
 
+    }
+
+    private static void formatUnusedAssetsTask(JsonObject jsonObject, JsonObject config) {
+        JsonArray groups = null;
+        if (config != null) {
+            groups = config.getAsJsonArray("group");
+        }
+
+        JsonArray resources = jsonObject.getAsJsonArray("unused-assets");
+        Map<String, List<String>> group = new HashMap<String, List<String>>();
+        jsonObject.addProperty("total-count", resources.size());
+        for (JsonElement resource : resources) {
+            String res = resource.getAsString();
+            String type = res.substring(0, res.indexOf('.', 2));
+            if (!group.containsKey(type)) {
+                group.put(type, new ArrayList<String>());
+            }
+            group.get(type).add(res);
+        }
+        jsonObject.remove("unused-assets");
+        for (Map.Entry<String, List<String>> entry : group.entrySet()) {
+            JsonArray list = new JsonArray();
+            for (String res : entry.getValue()) {
+                list.add(res);
+            }
+            jsonObject.add(entry.getKey(), list);
+        }
+    }
     private static void formatUnusedResourcesTask(JsonObject jsonObject) {
         JsonArray resources = jsonObject.getAsJsonArray("unused-resources");
         Map<String, List<String>> group = new HashMap<String, List<String>>();

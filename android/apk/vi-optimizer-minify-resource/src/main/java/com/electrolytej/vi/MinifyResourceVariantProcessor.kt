@@ -159,11 +159,6 @@ fun File.minify(optimizers: List<BaseOptimizer>) {
     }
 }
 
-fun File.deleteRecursivelyIfExists() {
-    if (!exists()) return
-    deleteRecursively()
-}
-
 //private fun BaseVariant.generateReport(results: CompressionResults) {
 //    val base = project.buildDir.toURI()
 //    val table = results.map {

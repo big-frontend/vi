@@ -276,6 +276,11 @@ public final class ApkJob {
                     jobConfig.setResMappingFilePath(config.get(JobConstants.PARAM_RES_MAPPING_TXT).getAsString());
                 }
 
+                if (config.has(JobConstants.PARAM_RESOLVED_ARTIFACTS_TXT)
+                        && !Util.isNullOrNil(config.get(JobConstants.PARAM_RESOLVED_ARTIFACTS_TXT).getAsString())) {
+                    jobConfig.setResolvedArtifactsFilePath(config.get(JobConstants.PARAM_RESOLVED_ARTIFACTS_TXT).getAsString());
+                }
+
                 JsonArray options = config.getAsJsonArray("options");
                 for (JsonElement option : options) {
                     if (option.isJsonObject()) {
@@ -351,6 +356,7 @@ public final class ApkJob {
                 String apkPath = "";
                 String mappingFilePath = "";
                 String resMappingFilePath = "";
+                String resolvedArtifactsFilePath = "";
 
                 if (globalParams.containsKey(JobConstants.PARAM_INPUT)) {
                     String inputDir = globalParams.get(JobConstants.PARAM_INPUT);
@@ -366,6 +372,7 @@ public final class ApkJob {
                             }
                             mappingFilePath = inputDir + "/" + ApkConstants.DEFAULT_MAPPING_FILENAME;
                             resMappingFilePath = inputDir + "/" + ApkConstants.DEFAULT_RESGUARD_MAPPING_FILENAME;
+                            resolvedArtifactsFilePath = inputDir + "/" + ApkConstants.DEFAULT_RESOLVED_ARTIFACTS_FILENAME;
                         }
                     }
                 }
@@ -396,6 +403,10 @@ public final class ApkJob {
                 }
                 jobConfig.setResMappingFilePath(resMappingFilePath);
 
+                if (globalParams.containsKey(JobConstants.PARAM_RESOLVED_ARTIFACTS_TXT)) {
+                    resolvedArtifactsFilePath = globalParams.get(JobConstants.PARAM_RESOLVED_ARTIFACTS_TXT);
+                }
+                jobConfig.setResolvedArtifactsFilePath(resolvedArtifactsFilePath);
 
                 String value = "";
                 if (globalParams.containsKey(JobConstants.PARAM_FORMAT) && !Util.isNullOrNil(globalParams.get(JobConstants.PARAM_FORMAT))) {

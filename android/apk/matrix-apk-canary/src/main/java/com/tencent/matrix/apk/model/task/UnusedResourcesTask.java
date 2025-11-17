@@ -19,6 +19,7 @@ package com.tencent.matrix.apk.model.task;
 
 import com.google.common.collect.Ordering;
 import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import com.tencent.matrix.apk.model.task.util.ApkConstants;
 import com.tencent.matrix.apk.model.exception.TaskExecuteException;
 import com.tencent.matrix.apk.model.exception.TaskInitException;
@@ -29,6 +30,7 @@ import com.tencent.matrix.apk.model.result.TaskResult;
 import com.tencent.matrix.apk.model.result.TaskResultFactory;
 import com.tencent.matrix.apk.model.task.util.ApkResourceDecoder;
 import com.tencent.matrix.apk.model.task.util.ApkUtil;
+import com.tencent.matrix.apk.model.task.util.JSONUtil;
 import com.tencent.matrix.javalib.util.FileUtil;
 import com.tencent.matrix.javalib.util.Log;
 import com.tencent.matrix.javalib.util.Util;
@@ -463,9 +465,11 @@ public class UnusedResourcesTask extends ApkTask {
             Log.i(TAG, "find unused references %d items", unusedResSet.size());
             Log.d(TAG, "find unused references %s", unusedResSet.toString());
             JsonArray jsonArray = new JsonArray();
+            JsonObject jsonObject = new JsonObject();
             for (String name : unusedResSet) {
-                jsonArray.add(name);
+                JSONUtil.addR(config, jsonObject, name);
             }
+            jsonArray.add(jsonObject);
             ((TaskJsonResult) taskResult).add("unused-resources", jsonArray);
             taskResult.setStartTime(startTime);
             taskResult.setEndTime(System.currentTimeMillis());

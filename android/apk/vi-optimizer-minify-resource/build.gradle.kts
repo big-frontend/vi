@@ -16,8 +16,24 @@ java {
 }
 val AGP_VERSION :String by project
 val KOTLIN_VERSION :String by project
+sourceSets {
+    getByName("main") {
+        java {
+            srcDirs("../vi-apk-commons/src/main/java/")
+        }
+        resources {
+            srcDirs("../vi-apk-commons/src/main/resources/")
+        }
+    }
+}
 dependencies{
     implementation(fileTree(mapOf("dir" to "libs", "include" to listOf("*.jar"))))
+    testCompileOnly("com.android.tools.build:gradle:${AGP_VERSION}")
+    testCompileOnly("com.android.tools.build:builder:${AGP_VERSION}")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:$KOTLIN_VERSION")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$KOTLIN_VERSION")
+    testImplementation("io.bootstage.testkit:testkit-gradle-plugin:1.4.0")
+    testImplementation(gradleTestKit())
     testImplementation("org.testng:testng:6.9.6")
     kapt("com.google.auto.service:auto-service:1.0")
     compileOnly(gradleApi())
@@ -33,10 +49,4 @@ dependencies{
     implementation("pink.madis.apk.arsc:android-chunk-utils:0.0.7")
     implementation("org.smali:smali:2.2.7")
     implementation("org.smali:baksmali:2.2.7")
-    testCompileOnly("com.android.tools.build:gradle:${AGP_VERSION}")
-    testCompileOnly("com.android.tools.build:builder:${AGP_VERSION}")
-    testImplementation("org.jetbrains.kotlin:kotlin-test:$KOTLIN_VERSION")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$KOTLIN_VERSION")
-    testImplementation("io.bootstage.testkit:testkit-gradle-plugin:1.4.0")
-    testImplementation(gradleTestKit())
 }

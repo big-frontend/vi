@@ -1,5 +1,6 @@
 {
     "--log": "DEBUG",
+    "--resolvedArtifactsTxt": "/Users/electrolytej/tech/bfeProjects/vi/android/app/build/reports/apk-checker/resolved-artifacts.txt",
     "options": [
         {"name": "-manifest"},
         {
@@ -74,32 +75,60 @@
         {"name": "-checkMultiLibrary"},
         {
             "name": "-checkMultiSTL",
-            "--toolnm": "E:\\Sdk\\ndk\\22.0.7026061\\toolchains\\aarch64-linux-android-4.9\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android-nm.exe"
+            "--toolnm": "/Users/electrolytej/Library/Android/sdk/ndk/22.0.7026061/toolchains/aarch64-linux-android-4.9/prebuilt/darwin-x86_64/bin/aarch64-linux-android-nm"
         },
         {
             "name": "-unstrippedSo",
-            "--toolnm": "E:\\Sdk\\ndk\\22.0.7026061\\toolchains\\aarch64-linux-android-4.9\\prebuilt\\windows-x86_64\\bin\\aarch64-linux-android-nm.exe"
+            "--toolnm": "/Users/electrolytej/Library/Android/sdk/ndk/22.0.7026061/toolchains/aarch64-linux-android-4.9/prebuilt/darwin-x86_64/bin/aarch64-linux-android-nm"
         }
     ],
     "--format": "mm.html,mm.json",
-    "--mappingTxt": "E:\\BfeProject\\perf\\vi\\android\\app\\build\\outputs\\mapping\\release\\mapping.txt",
-    "--apk": "E:\\BfeProject\\perf\\vi\\android\\app\\build\\outputs\\apk\\release\\app-release.apk",
-    "--output": "E:\\BfeProject\\perf\\vi\\android\\app\\build/outputs/apk-checker-result",
-    "--formatConfig": [{
-        "name": "-countMethod",
-        "group": [
-            {
-                "package": "android",
-                "name": "Android System"
-            },
-            {
-                "package": "java",
-                "name": "java system"
-            },
-            {
-                "package": "com.tencent.test.$",
-                "name": "com.tencent.test.$"
-            }
-        ]
-    }]
+    "--mappingTxt": "/Users/electrolytej/tech/bfeProjects/vi/android/app/build/outputs/mapping/release/mapping.txt",
+    "--apk": "/Users/electrolytej/tech/bfeProjects/vi/android/app/build/outputs/apk/release/app-release.apk",
+    "--output": "/Users/electrolytej/tech/bfeProjects/vi/android/app/build/reports/apk-checker/apk-checker-result",
+    "--formatConfig": [
+        {
+            "name": "-countMethod",
+            "group": [
+                {
+                    "package": "android",
+                    "name": "Android System"
+                },
+                {
+                    "package": "java",
+                    "name": "java system"
+                },
+                {
+                    "package": "com.tencent.test.$",
+                    "name": "com.tencent.test.$"
+                },
+                {
+                    "package": "com.electrolytej",
+                    "name": "com.electrolytej"
+                }
+            ]
+        },
+        {
+            "names": [
+                "-duplicatedFile",
+                "-unusedResources",
+                "-unusedAssets"
+            ],
+            "name": "",
+            "group": [
+                {
+                    "module": "vi-api",
+                    "name": "vi-api"
+                },
+                {
+                    "module": "bModule",
+                    "name": "bModule"
+                },
+                {
+                    "module": "androidx.appcompat:appcompat:1.6.1",
+                    "name": "androidx.appcompat:appcompat:1.6.1"
+                }
+            ]
+        }
+    ]
 }

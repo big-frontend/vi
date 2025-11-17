@@ -1,0 +1,107 @@
+package com.electrolytej.vi
+
+import com.android.build.gradle.BaseExtension
+import com.android.build.gradle.api.BaseVariant
+import com.didiglobal.booster.gradle.symbolList
+import com.didiglobal.booster.kotlinx.OS
+import com.didiglobal.booster.transform.TransformContext
+import org.apache.tools.ant.taskdefs.condition.Os
+import org.gradle.api.Project
+import org.gradle.api.file.ConfigurableFileCollection
+import java.io.File
+import java.io.FileInputStream
+import java.util.*
+
+
+fun Project.findBuildTools(): File {
+    val extension = project.extensions.findByType(BaseExtension::class.java)
+    extension?.buildToolsVersion
+        ?: throw java.lang.IllegalArgumentException("不存在build tools,可能需要配置")
+    return findBuildTools(extension.buildToolsVersion)
+}
+
+fun Project.findBuildTools(buildToolsVersion: String): File {
+    return File("${findSdkLocation()}/build-tools/${buildToolsVersion}")
+}
+
+fun Project.findAndroidJar(sdk: Int): ConfigurableFileCollection =
+    files("${findSdkLocation()}/platforms/android-$sdk/android.jar")
+
+fun Project.findSdkLocation(): File {
+    val rootDir = project.rootDir
+    val localProperties = File(rootDir, "local.properties")
+    if (localProperties.exists()) {
+        val properties = Properties()
+        FileInputStream(localProperties).use { instr ->
+            properties.load(instr)
+        }
+        var sdkDirProp = properties.getProperty("sdk.dir")
+        return if (sdkDirProp != null) {
+            File(sdkDirProp)
+        } else {
+            sdkDirProp = properties.getProperty("android.dir")
+            if (sdkDirProp != null) {
+                File(rootDir, sdkDirProp)
+            } else {
+                throw RuntimeException("No sdk.dir property defined in local.properties file.")
+            }
+        }
+    } else {
+        val envVar = System.getenv("ANDROID_HOME")
+        if (envVar != null) {
+            return File(envVar)
+        } else {
+            val property = System.getProperty("android.home")
+            if (property != null) {
+                return File(property)
+            }
+        }
+    }
+    throw RuntimeException("Can't find SDK path")
+}
+
+fun BaseVariant.findRTxtFile(): File {
+    return symbolList.singleFile
+}
+
+fun Project.findToolnm(): File? {
+    val extension = (extensions.findByType(BaseExtension::class.java) as BaseExtension)
+    val adb = extension.adbExecutable
+    val ndkVersion = extension.ndkVersion
+    if (ndkVersion.isNullOrEmpty()) {
+        throw IllegalArgumentException("ndkVersion 未配置")
+    }
+//    val SO_ARCH = 'arm-linux-androideabi'
+    val SO_ARCH = "aarch64-linux-android"
+    val platform = if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        "windows-x86_64"
+    } else if (Os.isFamily(Os.FAMILY_MAC) || OS.isMac()) {
+        "darwin-x86_64"
+    } else {
+        "linux-x86_64"
+    }
+    val nm = if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        "${SO_ARCH}-nm.exe"
+    } else if (Os.isFamily(Os.FAMILY_MAC) || OS.isMac()) {
+        "${SO_ARCH}-nm"
+    } else {
+        "${SO_ARCH}-nm"
+    }
+    return File(adb.parentFile.parentFile, "ndk").resolve(ndkVersion).resolve("toolchains")
+        .resolve("${SO_ARCH}-4.9").resolve("prebuilt").resolve(platform).resolve("bin").resolve(nm)
+}
+fun Project.getReport(name: String): File {
+    val report: File by lazy {
+        val dir = File("$buildDir/reports/apk-checker")
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+        val file = File(dir, name)
+        if (!file.exists()) {
+            file.createNewFile()
+        }
+        file
+    }
+    return report
+}
+

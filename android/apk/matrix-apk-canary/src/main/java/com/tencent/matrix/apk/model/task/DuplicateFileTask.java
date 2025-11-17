@@ -25,6 +25,7 @@ import com.tencent.matrix.apk.model.result.TaskJsonResult;
 import com.tencent.matrix.apk.model.result.TaskResult;
 import com.tencent.matrix.apk.model.result.TaskResultFactory;
 import com.android.utils.Pair;
+import com.tencent.matrix.apk.model.task.util.JSONUtil;
 import com.tencent.matrix.javalib.util.Util;
 
 import java.io.BufferedInputStream;
@@ -34,11 +35,14 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by jinqiuchen on 17/6/27.
@@ -141,20 +145,18 @@ public class DuplicateFileTask extends ApkTask {
                 }
             });
             long  maxReduceSize = 0;
+            JsonObject jsonObject = new JsonObject();
             for (Pair<String, Long> entry : fileSizeList) {
                 if (md5Map.get(entry.getFirst()).size() > 1) {
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("md5", entry.getFirst());
-                    jsonObject.addProperty("size", entry.getSecond());
                     maxReduceSize += entry.getSecond();
-                    JsonArray jsonFiles = new JsonArray();
+                    Set<String> modules = new HashSet<>();
                     for (String filename : md5Map.get(entry.getFirst())) {
-                        jsonFiles.add(filename);
+                        modules.add(JSONUtil.getModule(config, filename));
                     }
-                    jsonObject.add("files", jsonFiles);
-                    jsonArray.add(jsonObject);
+                    JSONUtil.add(jsonObject, Arrays.toString(modules.toArray()), gen(entry));
                 }
             }
+            jsonArray.add(jsonObject);
             ((TaskJsonResult) taskResult).add("files", jsonArray);
             ((TaskJsonResult) taskResult).add("max-reduce-size", maxReduceSize);
             taskResult.setStartTime(startTime);
@@ -163,5 +165,17 @@ public class DuplicateFileTask extends ApkTask {
             throw new TaskExecuteException(e.getMessage(), e);
         }
         return taskResult;
+    }
+
+    private JsonObject gen(Pair<String, Long> entry){
+        JsonObject jsonObject = new JsonObject();
+        jsonObject.addProperty("md5", entry.getFirst());
+        jsonObject.addProperty("size", entry.getSecond());
+        JsonArray jsonFiles = new JsonArray();
+        for (String filename : md5Map.get(entry.getFirst())) {
+            jsonFiles.add(filename);
+        }
+        jsonObject.add("files", jsonFiles);
+        return jsonObject;
     }
 }

@@ -40,6 +40,7 @@ public final class JobConstants {
     public static final String PARAM_IGNORE_RESOURCES_LIST = "--ignoreResources";
     public static final String PARAM_MAPPING_TXT = "--mappingTxt";
     public static final String PARAM_RES_MAPPING_TXT = "--resMappingTxt";
+    public static final String PARAM_RESOLVED_ARTIFACTS_TXT = "--resolvedArtifactsTxt";
     public static final String PARAM_IGNORE_ASSETS_LIST = "--ignoreAssets";
     public static final String PARAM_LOG_LEVEL = "--log";
 
